@@ -1,0 +1,9 @@
+Microsoft (R) .NET Framework Installation utility Version 4.0.30319.33440
+Copyright (C) Microsoft Corporation.  All rights reserved.
+
+Exception occurred while initializing the installation:
+System.IO.FileNotFoundException: Could not load file or assembly 'file:///D:\Repositories\olympus\Lighthouse\src\Lighthouse.Service\Lighthouse.Service.exe' or one of its dependencies. The system cannot find the file specified..
+[SC] StartService: OpenService FAILED 1060:
+
+The specified service does not exist as an installed service.
+

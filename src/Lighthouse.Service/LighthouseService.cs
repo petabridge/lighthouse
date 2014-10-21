@@ -1,4 +1,5 @@
-﻿using System.ServiceProcess;
+﻿using System.Diagnostics;
+using System.ServiceProcess;
 using Akka.Actor;
 
 namespace Lighthouse.Service
@@ -14,7 +15,16 @@ namespace Lighthouse.Service
 
         protected override void OnStart(string[] args)
         {
-            
+
+            if (!EventLog.SourceExists("Lighthouse"))
+            {
+                EventLog.CreateEventSource("Lighthouse", "Application");
+            }
+
+            var _log = new EventLog("Application", ".", "Lighthouse");
+
+            _log.WriteEntry("Started lighthouse service...");
+
             if (args.Length >= 2)
             {
                 _lighthouse = LighthouseHost.LaunchLighthouse(args[0], int.Parse(args[1]));
