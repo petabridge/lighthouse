@@ -32,14 +32,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka">
-      <HintPath>..\..\packages\Akka.0.7.0\lib\net45\Akka.dll</HintPath>
+    <Reference Include="Akka, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Akka.0.7.1\lib\net45\Akka.dll</HintPath>
     </Reference>
-    <Reference Include="Akka.Cluster">
-      <HintPath>..\..\packages\Akka.Cluster.0.7.0-pre1410202041\lib\net45\Akka.Cluster.dll</HintPath>
+    <Reference Include="Akka.Cluster, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Akka.Cluster.0.7.1-pre1410212236\lib\net45\Akka.Cluster.dll</HintPath>
     </Reference>
-    <Reference Include="Akka.Remote">
-      <HintPath>..\..\packages\Akka.Remote.0.7.0\lib\net45\Akka.Remote.dll</HintPath>
+    <Reference Include="Akka.Remote, Version=0.7.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Akka.Remote.0.7.1\lib\net45\Akka.Remote.dll</HintPath>
     </Reference>
     <Reference Include="Google.ProtocolBuffers">
       <HintPath>..\..\packages\Google.ProtocolBuffers.2.4.1.521\lib\net40\Google.ProtocolBuffers.dll</HintPath>
