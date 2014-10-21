@@ -43,7 +43,8 @@ namespace Lighthouse
             injectedClusterConfigString += "]";
 
             var finalConfig = ConfigurationFactory.ParseString(
-                string.Format("akka.remote.helios.tcp.public-hostname = {0}", ipAddress))
+                string.Format(@"akka.remote.helios.tcp.public-hostname = {0} 
+akka.remote.helios.tcp.port = {1}", ipAddress, port))
                 .WithFallback(ConfigurationFactory.ParseString(injectedClusterConfigString)).WithFallback(clusterConfig);
 
             return ActorSystem.Create(systemName, finalConfig);

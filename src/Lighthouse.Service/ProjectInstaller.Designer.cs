@@ -2,6 +2,9 @@
 {
     partial class ProjectInstaller
     {
+        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller;
+
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -49,8 +52,6 @@
         }
 
         #endregion
-
-        private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller;
-        private System.ServiceProcess.ServiceInstaller serviceInstaller;
+        
     }
 }

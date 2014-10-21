@@ -20,14 +20,6 @@ namespace Lighthouse.Service
             //# Service Information
             serviceInstaller.DisplayName = "Lighthouse Service Discovery";
             serviceInstaller.Description = "Automatic service discovery for Akka.NET clusters";
-            this.Installers.Add(serviceProcessInstaller);
-            this.Installers.Add(serviceInstaller);
-            serviceInstaller.AfterInstall += (sender, args) =>
-            {
-                var sc = new ServiceController("Lighthouse");
-                sc.Start();
-            };
-
             InitializeComponent();
         }
     }
