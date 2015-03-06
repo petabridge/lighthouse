@@ -3,6 +3,10 @@
 # Fake directories
 src/.build/**
 
+# Google Protobuffs
+protos/
+licenses/
+
 
 
 #GitExtensions
