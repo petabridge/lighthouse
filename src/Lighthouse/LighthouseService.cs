@@ -19,22 +19,20 @@ namespace Lighthouse
     {
         private readonly string _ipAddress;
         private readonly int? _port;
-        private bool _debug;
 
         private ActorSystem _lighthouseSystem;
 
-        public LighthouseService() : this(null, null, false) { }
+        public LighthouseService() : this(null, null) { }
 
-        public LighthouseService(string ipAddress, int? port, bool debug)
+        public LighthouseService(string ipAddress, int? port)
         {
             _ipAddress = ipAddress;
             _port = port;
-            _debug = debug;
         }
 
         public bool Start(HostControl hostControl)
         {
-            _lighthouseSystem = LighthouseHostFactory.LaunchLighthouse(_ipAddress, _port, _debug);
+            _lighthouseSystem = LighthouseHostFactory.LaunchLighthouse(_ipAddress, _port);
             return true;
         }
 

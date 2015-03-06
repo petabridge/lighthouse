@@ -24,7 +24,7 @@ namespace Lighthouse
     /// </summary>
     public static class LighthouseHostFactory
     {
-        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null, bool debug = false)
+        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null)
         {
             var systemName = "lighthouse";
             var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
@@ -57,10 +57,8 @@ namespace Lighthouse
             var finalConfig = ConfigurationFactory.ParseString(
                 string.Format(@"akka.remote.helios.tcp.public-hostname = {0} 
 akka.remote.helios.tcp.port = {1}", ipAddress, port))
-                .WithFallback(ConfigurationFactory.ParseString(injectedClusterConfigString));
-            if (debug) //use default loggers instead of NLog
-                finalConfig = finalConfig.WithFallback(@"loggers = [""Akka.Event.DefaultLogger""]"); 
-            finalConfig = finalConfig.WithFallback(clusterConfig);
+                .WithFallback(ConfigurationFactory.ParseString(injectedClusterConfigString))
+                .WithFallback(clusterConfig);
 
             return ActorSystem.Create(systemName, finalConfig);
         }
