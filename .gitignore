@@ -6,7 +6,7 @@ src/.build/**
 # Google Protobuffs
 protos/
 licenses/
-
+Changes.txt
 
 
 #GitExtensions
