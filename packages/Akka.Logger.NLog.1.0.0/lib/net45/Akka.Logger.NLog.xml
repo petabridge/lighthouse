@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Akka.Logger.NLog</name>
+    </assembly>
+    <members>
+    </members>
+</doc>

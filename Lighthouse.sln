@@ -3,9 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.Service", "src\Lighthouse.Service\Lighthouse.Service.csproj", "{A7B076DD-9C02-4C07-917E-AA6A96D3B47E}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.App", "src\Lighthouse.App\Lighthouse.App.csproj", "{C0812543-F1D3-4F93-B6DC-B02F0F624F0C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -13,14 +11,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A7B076DD-9C02-4C07-917E-AA6A96D3B47E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7B076DD-9C02-4C07-917E-AA6A96D3B47E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7B076DD-9C02-4C07-917E-AA6A96D3B47E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7B076DD-9C02-4C07-917E-AA6A96D3B47E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C0812543-F1D3-4F93-B6DC-B02F0F624F0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C0812543-F1D3-4F93-B6DC-B02F0F624F0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C0812543-F1D3-4F93-B6DC-B02F0F624F0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C0812543-F1D3-4F93-B6DC-B02F0F624F0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
