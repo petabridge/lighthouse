@@ -32,14 +32,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka">
+    <Reference Include="Akka, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Akka.1.0.0\lib\net45\Akka.dll</HintPath>
     </Reference>
     <Reference Include="Akka.Cluster, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Akka.Cluster.1.0.0-pre1504092226\lib\net45\Akka.Cluster.dll</HintPath>
     </Reference>
-    <Reference Include="Akka.Logger.NLog">
+    <Reference Include="Akka.Logger.NLog, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Akka.Logger.NLog.1.0.0\lib\net45\Akka.Logger.NLog.dll</HintPath>
     </Reference>
     <Reference Include="Akka.Remote, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
