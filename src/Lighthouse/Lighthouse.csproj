@@ -32,20 +32,24 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Akka, Version=1.0.6.16, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.1.0.6\lib\net45\Akka.dll</HintPath>
+    <Reference Include="Akka, Version=1.0.8.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.1.0.8\lib\net45\Akka.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Akka.Cluster, Version=1.0.6.17, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.Cluster.1.0.6.17-beta\lib\net45\Akka.Cluster.dll</HintPath>
+    <Reference Include="Akka.Cluster, Version=1.0.8.25, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.Cluster.1.0.8.25-beta\lib\net45\Akka.Cluster.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Akka.Logger.NLog, Version=1.0.6.16, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.Logger.NLog.1.0.6\lib\net45\Akka.Logger.NLog.dll</HintPath>
+    <Reference Include="Akka.Logger.NLog, Version=1.0.7.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.Logger.NLog.1.0.7\lib\net45\Akka.Logger.NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Akka.Remote, Version=1.0.6.16, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Akka.Remote.1.0.6\lib\net45\Akka.Remote.dll</HintPath>
+    <Reference Include="Akka.Remote, Version=1.0.8.24, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.Remote.1.0.8\lib\net45\Akka.Remote.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akka.Serialization.Wire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.Serialization.Wire.1.0.8.25-beta\lib\net45\Akka.Serialization.Wire.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Google.ProtocolBuffers, Version=2.4.1.555, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
@@ -88,6 +92,10 @@
       <HintPath>..\..\packages\Topshelf.NLog.3.2.0\lib\net40-full\Topshelf.NLog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Wire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Wire.0.0.6\lib\Wire.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LighthouseHostFactory.cs" />
@@ -96,13 +104,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="install\install-lighthouse.cmd" />
     <None Include="install\uninstall-lighthouse.cmd" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
