@@ -48,6 +48,10 @@
       <HintPath>..\..\packages\Akka.Remote.1.1.1\lib\net45\Akka.Remote.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Akka.Serialization.Wire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Akka.Serialization.Wire.1.1.1.28-beta\lib\net45\Akka.Serialization.Wire.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Google.ProtocolBuffers, Version=2.4.1.555, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Google.ProtocolBuffers.2.4.1.555\lib\net40\Google.ProtocolBuffers.dll</HintPath>
       <Private>True</Private>
@@ -86,6 +90,10 @@
     </Reference>
     <Reference Include="Topshelf.NLog, Version=3.2.150.0, Culture=neutral, PublicKeyToken=b800c4cfcdeea87b, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Topshelf.NLog.3.2.0\lib\net40-full\Topshelf.NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Wire, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Wire.0.0.6\lib\Wire.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
