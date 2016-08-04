@@ -10,12 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Threading.Tasks;
 using Akka.Actor;
-using Topshelf;
 
 namespace Lighthouse
 {
-    public class LighthouseService : ServiceControl
+    public class LighthouseService
     {
         private readonly string _ipAddress;
         private readonly int? _port;
@@ -30,16 +30,14 @@ namespace Lighthouse
             _port = port;
         }
 
-        public bool Start(HostControl hostControl)
+        public void Start()
         {
             _lighthouseSystem = LighthouseHostFactory.LaunchLighthouse(_ipAddress, _port);
-            return true;
         }
 
-        public bool Stop(HostControl hostControl)
+        public async Task StopAsync()
         {
-            _lighthouseSystem.Shutdown();
-            return true;
+            await _lighthouseSystem.Terminate();
         }
     }
 }
