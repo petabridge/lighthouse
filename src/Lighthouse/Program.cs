@@ -30,8 +30,8 @@ namespace Lighthouse
                 x.SetServiceName("Lighthouse");
                 x.SetDisplayName("Lighthouse Service Discovery");
                 x.SetDescription("Lighthouse Service Discovery for Akka.NET Clusters");
-                
-                x.RunAsLocalSystem();
+
+                x.RunAsNetworkService();
                 x.StartAutomatically();
                 x.UseNLog();
                 x.EnableServiceRecovery(r => r.RestartService(1));
