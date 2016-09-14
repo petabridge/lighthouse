@@ -20,15 +20,20 @@ namespace Lighthouse
         {
             return (int) HostFactory.Run(x =>
             {
+                x.Service<LighthouseService>(s =>
+                {
+                    s.ConstructUsing(ss => new LighthouseService());
+                    s.WhenStarted(ss => ss.Start());
+                    s.WhenStopped(ss => ss.StopAsync().Wait());
+                });
+
                 x.SetServiceName("Lighthouse");
                 x.SetDisplayName("Lighthouse Service Discovery");
                 x.SetDescription("Lighthouse Service Discovery for Akka.NET Clusters");
-                
-                x.UseAssemblyInfoForServiceInfo();
-                x.RunAsLocalSystem();
+
+                x.RunAsNetworkService();
                 x.StartAutomatically();
                 x.UseNLog();
-                x.Service<LighthouseService>();
                 x.EnableServiceRecovery(r => r.RestartService(1));
             });
         }
