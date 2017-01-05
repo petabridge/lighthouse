@@ -27,8 +27,8 @@ namespace Lighthouse
                     s.WhenStopped(ss => ss.StopAsync().Wait());
                 });
 
-                x.SetServiceName("Lighthouse");
-                x.SetDisplayName("Lighthouse Service Discovery");
+                x.SetServiceName("Akka.Net_Lighthouse");
+                x.SetDisplayName("Akka.Net Lighthouse Service Discovery");
                 x.SetDescription("Lighthouse Service Discovery for Akka.NET Clusters");
 
                 x.RunAsNetworkService();
