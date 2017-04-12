@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Cluster;
 
 namespace Lighthouse
 {
@@ -37,6 +38,7 @@ namespace Lighthouse
 
         public async Task StopAsync()
         {
+            await Cluster.Get(_lighthouseSystem).LeaveAsync();
             await _lighthouseSystem.Terminate();
         }
     }
