@@ -1,9 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.WhatsMyIP", "src\Lighthouse.WhatsMyIP\Lighthouse.WhatsMyIP.csproj", "{AC05A11C-65E9-4DFD-8635-6B2AE1F7D193}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{65FB6FB1-A0CF-4223-AA47-F4BD29A1D337}"
+	ProjectSection(SolutionItems) = preProject
+		build.fsx = build.fsx
+		build.ps1 = build.ps1
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +23,10 @@ Global
 		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC05A11C-65E9-4DFD-8635-6B2AE1F7D193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC05A11C-65E9-4DFD-8635-6B2AE1F7D193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC05A11C-65E9-4DFD-8635-6B2AE1F7D193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC05A11C-65E9-4DFD-8635-6B2AE1F7D193}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
