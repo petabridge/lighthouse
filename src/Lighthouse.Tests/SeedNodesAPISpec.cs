@@ -67,7 +67,7 @@ namespace Lighthouse.Tests
         [Fact]
         public void When_no_seed_nodes_existing_only_returns_self_seed_node()
         {
-            var configNoSeedNodes = ConfigurationFactory.ParseString(@"cluster.seed-nodes = []");
+            var configNoSeedNodes = ConfigurationFactory.ParseString(@"akka.cluster.seed-nodes = []");
             var hoconConfigSection = (AkkaConfigurationSection) ConfigurationManager.GetSection("akka");
             var hoconConfig = hoconConfigSection.AkkaConfig;
             var finalConfig = configNoSeedNodes.WithFallback(hoconConfig);
@@ -75,10 +75,8 @@ namespace Lighthouse.Tests
             var selfSeedNode = SeedNodeConfigurationHelpers.GetSelfSeedNodeAddress(finalConfig);
             var allSeedNodes = SeedNodeConfigurationHelpers.GetAllSeedNodes(finalConfig, selfSeedNode);
 
-            foreach (var seedNode in allSeedNodes)
-            {
-                _output.WriteLine(seedNode);
-            }
+            allSeedNodes.Count.Should().Be(1);
+            allSeedNodes[0].Should().Be(@"akka.tcp://webcrawler@172.22.144.2:4053");
         }
 
         [Fact]
@@ -86,6 +84,7 @@ namespace Lighthouse.Tests
         {
             var emptySeedNodes = ConfigurationFactory.ParseString(@"akka.cluster.seed-nodes = []");
             var tryGetSeedNodes = emptySeedNodes.GetStringList("akka.cluster.seed-nodes");
+            _output.WriteLine(tryGetSeedNodes.ToString());
         }
     }
 }

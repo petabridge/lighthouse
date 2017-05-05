@@ -25,7 +25,7 @@ namespace Lighthouse.WhatsMyIP.Controllers
         public static IList<string> GetAllSeedNodes(Config akkaConfig, string selfSeedNode)
         {
             var allSeedNodes = new List<string>();
-            if (!akkaConfig.GetConfig("akka.cluster.seed-nodes").IsEmpty)
+            if (akkaConfig.GetStringList("akka.cluster.seed-nodes").Count > 0)
             {
                 var otherSeedNodes = akkaConfig.GetStringList("akka.cluster.seed-nodes");
                 allSeedNodes.AddRange(otherSeedNodes);
