@@ -1,1 +1,1 @@
-﻿docker build -t nickc/lighthouse:latest .
+﻿docker build -t petabridge/lighthouse:latest .

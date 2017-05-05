@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using Lighthouse.WhatsMyIP;
 using Topshelf;
 
 namespace Lighthouse
@@ -25,6 +27,12 @@ namespace Lighthouse
                     s.ConstructUsing(ss => new LighthouseService());
                     s.WhenStarted(ss => ss.Start());
                     s.WhenStopped(ss => ss.StopAsync().Wait());
+                });
+                x.Service<WhatsMyIPService>(s =>
+                {
+                    s.ConstructUsing(_ => new WhatsMyIPService());
+                    s.WhenStarted(svc => svc.Start());
+                    s.WhenStopped(svc => svc.Stop());
                 });
 
                 x.SetServiceName("Lighthouse");

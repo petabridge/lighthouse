@@ -99,14 +99,18 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="install\install-lighthouse.cmd" />
-    <None Include="install\uninstall-lighthouse.cmd" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Lighthouse.WhatsMyIP\Lighthouse.WhatsMyIP.csproj">
+      <Project>{ac05a11c-65e9-4dfd-8635-6b2ae1f7d193}</Project>
+      <Name>Lighthouse.WhatsMyIP</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
