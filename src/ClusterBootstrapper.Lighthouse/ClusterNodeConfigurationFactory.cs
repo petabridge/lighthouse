@@ -21,10 +21,25 @@ namespace ClusterBootstrapper.Lighthouse
 
             return seedNodeHttpUri.Uri;
         }
+        internal static Uri GetSeedNodeDiscoveryUri(Config config)
+        {
+            var seedNodes = config.GetStringList("akka.cluster.seed-nodes");
+            Uri seedNodeUri;
+            Uri.TryCreate(seedNodes[0], UriKind.Absolute, out seedNodeUri);
+            var seedNodeHttpUri = new UriBuilder("http", seedNodeUri.Host, 9000, "api/seednodes");
+
+            return seedNodeHttpUri.Uri;
+        }
 
         internal static string GetSelfIpAddress(HttpClient client, Uri selfIpDiscoveryUri)
         {
             var response = client.GetAsync(selfIpDiscoveryUri).Result;
+            return response.Content.ReadAsStringAsync().Result;
+        }
+
+        internal static string GetAllSeedNodes(HttpClient client, Uri seedNodeDiscoveryUri)
+        {
+            var response = client.GetAsync(seedNodeDiscoveryUri).Result;
             return response.Content.ReadAsStringAsync().Result;
         }
 
@@ -41,20 +56,34 @@ namespace ClusterBootstrapper.Lighthouse
             return remoteConfig;
         }
 
+        internal static Config CreateClusterConfig(string allSeedNodesList)
+        {
+            var clusterConfig =
+                Akka.Configuration.ConfigurationFactory.ParseString($@"akka.cluster.seed-nodes = {allSeedNodesList}");
+            return clusterConfig;
+        }
+
         public static Config CreateConfig()
         {
             var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
             var config = section.AkkaConfig;
 
             var selfIpDiscoveryUri = GetSelfIpDiscoveryUri(config);
+            var seedNodeDiscoveryUri = GetSeedNodeDiscoveryUri(config);
+
             string selfIpAddress;
+            string allSeedNodes;
             using (var client = new HttpClient())
             {
                 selfIpAddress = GetSelfIpAddress(client, selfIpDiscoveryUri);
+                allSeedNodes = GetAllSeedNodes(client, seedNodeDiscoveryUri);
             }
 
             var remoteConfig = CreateRemoteConfig(selfIpAddress);
-            var finalConfig = remoteConfig.WithFallback(config);
+            var clusterConfig = CreateClusterConfig(allSeedNodes);
+            var finalConfig = remoteConfig
+                                .WithFallback(clusterConfig)
+                                .WithFallback(config);
             return finalConfig;
         }
     }

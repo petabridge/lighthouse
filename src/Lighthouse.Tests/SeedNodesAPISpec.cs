@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Http.Results;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;
 using FluentAssertions;
-using Lighthouse.WhatsMyIP.Controllers;
+using Lighthouse.Controllers;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -80,11 +83,22 @@ namespace Lighthouse.Tests
         }
 
         [Fact]
-        public void Config_empty_seed_nodes_null_exception()
+        public void Build_seed_nodes_http_response()
         {
-            var emptySeedNodes = ConfigurationFactory.ParseString(@"akka.cluster.seed-nodes = []");
-            var tryGetSeedNodes = emptySeedNodes.GetStringList("akka.cluster.seed-nodes");
-            _output.WriteLine(tryGetSeedNodes.ToString());
+            var controller = new SeedNodesController();
+
+            var actionResult = controller.Get();
+            var response = actionResult as OkNegotiatedContentResult<IList<string>>;
+
+            var expectedAllSeedNodes =
+                new List<String>()
+                {
+                    "akka.tcp://webcrawler@172.22.144.2:4053",
+                    "akka.tcp://webcrawler@127.0.0.1:4054",
+                    "akka.tcp://webcrawler@127.0.0.1:4055"
+                };
+
+            response.Content.ShouldBeEquivalentTo(expectedAllSeedNodes);
         }
     }
 }

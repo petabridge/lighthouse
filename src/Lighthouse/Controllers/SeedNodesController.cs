@@ -1,22 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Http;
 using Akka.Configuration;
 using Akka.Configuration.Hocon;
 
-namespace Lighthouse.WhatsMyIP.Controllers
+namespace Lighthouse.Controllers
 {
     public class SeedNodesController : ApiController
     {
         // GET api/seednodes
-        public HttpResponseMessage Get()
+        public IHttpActionResult Get()
         {
-            throw new NotImplementedException();
+            var config = SeedNodeConfigurationHelpers.GetAkkaConfig();
+            var selfSeedNodeAddress = SeedNodeConfigurationHelpers.GetSelfSeedNodeAddress(config);
+            var allSeedNodes = SeedNodeConfigurationHelpers.GetAllSeedNodes(config, selfSeedNodeAddress);
+
+            return Ok(allSeedNodes);
         }
     }
 

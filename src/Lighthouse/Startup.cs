@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Lighthouse.WhatsMyIP.Controllers;
+﻿using System.Web.Http;
+using Lighthouse;
+using Lighthouse.Controllers;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(Lighthouse.WhatsMyIP.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
-namespace Lighthouse.WhatsMyIP
+namespace Lighthouse
 {
     public class Startup
     {
