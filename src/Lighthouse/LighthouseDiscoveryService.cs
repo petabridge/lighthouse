@@ -4,7 +4,7 @@ using Microsoft.Owin.Hosting;
 
 namespace Lighthouse
 {
-    public class WhatsMyIPService
+    public class LighthouseDiscoveryService
     {
         private IDisposable _webServer;
 

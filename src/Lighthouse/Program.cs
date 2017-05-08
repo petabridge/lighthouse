@@ -27,9 +27,9 @@ namespace Lighthouse
                     s.WhenStarted(ss => ss.Start());
                     s.WhenStopped(ss => ss.StopAsync().Wait());
                 });
-                x.Service<WhatsMyIPService>(s =>
+                x.Service<LighthouseDiscoveryService>(s =>
                 {
-                    s.ConstructUsing(_ => new WhatsMyIPService());
+                    s.ConstructUsing(_ => new LighthouseDiscoveryService());
                     s.WhenStarted(svc => svc.Start());
                     s.WhenStopped(svc => svc.Stop());
                 });

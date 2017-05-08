@@ -118,7 +118,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="WhatsMyIPService.cs" />
+    <Compile Include="LighthouseDiscoveryService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
