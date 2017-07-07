@@ -38,9 +38,9 @@ namespace Lighthouse
 
             var remoteConfig = clusterConfig.GetConfig("akka.remote");
             ipAddress = ipAddress ??
-                        remoteConfig.GetString("helios.tcp.public-hostname") ??
+                        remoteConfig.GetString("dot-netty.tcp.public-hostname") ??
                         "127.0.0.1"; //localhost as a final default
-            int port = specifiedPort ?? remoteConfig.GetInt("helios.tcp.port");
+            int port = specifiedPort ?? remoteConfig.GetInt("dot-netty.tcp.port");
 
             if(port == 0) throw new ConfigurationException("Need to specify an explicit port for Lighthouse. Found an undefined port or a port value of 0 in App.config.");
 
@@ -55,8 +55,8 @@ namespace Lighthouse
             injectedClusterConfigString += "]";
 
             var finalConfig = ConfigurationFactory.ParseString(
-                string.Format(@"akka.remote.helios.tcp.public-hostname = {0} 
-akka.remote.helios.tcp.port = {1}", ipAddress, port))
+                string.Format(@"akka.remote.dot-netty.tcp.public-hostname = {0} 
+akka.remote.dot-netty.tcp.port = {1}", ipAddress, port))
                 .WithFallback(ConfigurationFactory.ParseString(injectedClusterConfigString))
                 .WithFallback(clusterConfig);
 
