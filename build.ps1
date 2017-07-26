@@ -31,7 +31,7 @@ Param(
 
 $FakeVersion = "4.50.0"
 $NBenchVersion = "0.3.4"
-$DocFxVersion = "1.9.4"
+$DocFxVersion = "2.21.2"
 $XunitVersion= "2.2.0"
 $DotNetChannel = "preview";
 $DotNetVersion = "1.0.0";
@@ -90,10 +90,10 @@ if (!(Test-Path $XunitRunnerExePath)) {
 # INSTALL docfx
 ###########################################################################
 
-$DocFxExePath = Join-Path $ToolPath "docfx.msbuild/tools/docfx.exe"
+$DocFxExePath = Join-Path $ToolPath "docfx.console/tools/docfx.exe"
 if (!(Test-Path $DocFxExePath)) {
     Write-Host "Installing DocFx..."
-    Invoke-Expression "&`"$NugetPath`" install docfx.msbuild -ExcludeVersion -Version $DocFxVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
+    Invoke-Expression "&`"$NugetPath`" install docfx.console -ExcludeVersion -Version $DocFxVersion -OutputDirectory `"$ToolPath`"" | Out-Null;
     if ($LASTEXITCODE -ne 0) {
         Throw "An error occured while restoring docfx from NuGet."
     }

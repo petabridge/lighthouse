@@ -7,6 +7,7 @@ open System.Text
 
 open Fake
 open Fake.RestorePackageHelper
+open Fake.DocFxHelper
 open Fake.TaskRunnerHelper
 open Fake.Testing
 open Fake.AssemblyInfoFile
@@ -38,6 +39,7 @@ let preReleaseVersion = version + "-beta" //suffixes the assembly for pre-releas
 let isUnstableDocs = hasBuildParam "unstable"
 let isPreRelease = hasBuildParam "nugetprerelease"
 let release = if isPreRelease then ReleaseNotesHelper.ReleaseNotes.New(version, version + "-beta", parsedRelease.Notes) else parsedRelease
+let supportedAkkaVersion = "1.2.3"
 
 //--------------------------------------------------------------------------------
 // Directories
@@ -48,13 +50,14 @@ let outputNuGet = output @@ "nuget"
 let outputChocolatey = output @@ "chocolatey"
 let outputZip = output @@ "zipRelease"
 let workingNuGet = output @@ "build"
+let workingDocfx = FullName "./docs" @@ "_site"
+log workingDocfx
 
 Target "Clean" (fun _ ->
     CleanDir output
     CleanDir outputNuGet
-    CleanDir outputChocolatey
-    CleanDir outputZip
     CleanDir workingNuGet
+    CleanDir workingDocfx
     CleanDirs !! "./**/bin"
     CleanDirs !! "./**/obj"
 )
@@ -120,6 +123,166 @@ Target "CopyOutput" (fun _ ->
 )
 
 //--------------------------------------------------------------------------------
+// NuGet targets
+//--------------------------------------------------------------------------------
+
+Target "CreateNuget" (fun _ ->
+    let getLighthouseDependencies project = // no project dependencies
+        match project with
+        | _ -> []
+
+    let getProjectVersion project =
+         match project with
+         | _ -> release.NugetVersion
+
+    let mutable dirName = 1
+    let removeDir dir = 
+        let del _ = 
+            DeleteDir dir
+            not (directoryExists dir)
+        runWithRetries del 3 |> ignore
+
+    let getDirName workingDir dirCount =
+        workingDir + dirCount.ToString()
+
+    let getReleaseFiles project releaseDir =
+        match project with
+        | _ ->
+            !! (releaseDir @@ project + ".dll")
+            ++ (releaseDir @@ project + ".exe")
+            ++ (releaseDir @@ project + ".pdb")
+            ++ (releaseDir @@ project + ".xml")
+
+    let getExternalPackages project packagesFile =
+        match project with
+        | "Lighthouse" -> getDependencies packagesFile
+        | _ -> []
+
+    CleanDir workingNuGet
+
+    ensureDirectory outputNuGet
+    let nuspecFiles = !! "src/**/*.nuspec"
+
+    for nuspec in nuspecFiles do
+        printfn "Creating nuget packages for %s" nuspec
+        
+        let project = Path.GetFileNameWithoutExtension nuspec 
+        let projectDir = Path.GetDirectoryName nuspec
+        let projectFile = (!! (projectDir @@ project + ".*sproj")) |> Seq.head
+        let releaseDir = projectDir @@ @"bin\Release"
+        let packages = projectDir @@ "packages.config"
+        let packageDependencies = getExternalPackages project packages
+        let dependencies = packageDependencies @ getLighthouseDependencies project
+        let releaseVersion = getProjectVersion project
+
+        let pack outputDir symbolPackage =
+            NuGetHelper.NuGet
+                (fun p ->
+                    { p with
+                        Description = description
+                        Authors = authors
+                        Copyright = copyright
+                        Project =  project
+                        Properties = ["Configuration", "Release"]
+                        ReleaseNotes = release.Notes |> String.concat "\n"
+                        Version = releaseVersion
+                        Tags = tags |> String.concat " "
+                        OutputPath = outputDir
+                        WorkingDir = workingNuGet
+                        SymbolPackage = symbolPackage
+                        Dependencies = dependencies })
+                nuspec
+
+        // Copy dll, pdb and xml to libdir = workingDir/lib/net45/
+        let libDir = workingNuGet @@ @"lib\net45"
+        printfn "Creating output directory %s" libDir
+        ensureDirectory libDir
+        CleanDir libDir
+        getReleaseFiles project releaseDir
+        |> CopyFiles libDir
+
+        // Copy all src-files (.cs and .fs files) to workingDir/src
+        let nugetSrcDir = workingNuGet @@ @"src/"
+        CleanDir nugetSrcDir
+
+        let isCs = hasExt ".cs"
+        let isFs = hasExt ".fs"
+        let isAssemblyInfo f = (filename f).Contains("AssemblyInfo")
+        let isSrc f = (isCs f || isFs f) && not (isAssemblyInfo f) 
+        CopyDir nugetSrcDir projectDir isSrc
+        
+        //Remove workingDir/src/obj and workingDir/src/bin
+        removeDir (nugetSrcDir @@ "obj")
+        removeDir (nugetSrcDir @@ "bin")
+
+        // Create both normal nuget package and symbols nuget package. 
+        // Uses the files we copied to workingDir and outputs to nugetdir
+        pack outputNuGet NugetSymbolPackage.Nuspec
+)
+
+Target "PublishNuget" (fun _ ->
+    let rec publishPackage url accessKey trialsLeft packageFile =
+        let nugetExe = "./tools/nuget.exe"
+        let tracing = enableProcessTracing
+        enableProcessTracing <- false
+        let args p =
+            match p with
+            | (pack, key, "") -> sprintf "push \"%s\" %s" pack key
+            | (pack, key, url) -> sprintf "push \"%s\" %s -source %s" pack key url
+
+        tracefn "Pushing %s Attempts left: %d" (FullName packageFile) trialsLeft
+        try 
+            let result = ExecProcess (fun info -> 
+                    info.FileName <- nugetExe
+                    info.WorkingDirectory <- (Path.GetDirectoryName (FullName packageFile))
+                    info.Arguments <- args (packageFile, accessKey,url)) (System.TimeSpan.FromMinutes 1.0)
+            enableProcessTracing <- tracing
+            if result <> 0 then failwithf "Error during NuGet symbol push. %s %s" nugetExe (args (packageFile, "key omitted",url))
+        with exn -> 
+            if (trialsLeft > 0) then (publishPackage url accessKey (trialsLeft-1) packageFile)
+            else raise exn
+    let shouldPushNugetPackages = hasBuildParam "nugetkey"
+    let shouldPushSymbolsPackages = (hasBuildParam "symbolspublishurl") && (hasBuildParam "symbolskey")
+    
+    if (shouldPushNugetPackages || shouldPushSymbolsPackages) then
+        printfn "Pushing nuget packages"
+        if shouldPushNugetPackages then
+            let normalPackages= 
+                !! (outputNuGet @@ "*.nupkg") 
+                -- (outputNuGet @@ "*.symbols.nupkg") |> Seq.sortBy(fun x -> x.ToLower())
+            for package in normalPackages do
+                try
+                    publishPackage (getBuildParamOrDefault "nugetpublishurl" "") (getBuildParam "nugetkey") 3 package
+                with exn ->
+                    printfn "%s" exn.Message
+
+        if shouldPushSymbolsPackages then
+            let symbolPackages= !! (outputNuGet @@ "*.symbols.nupkg") |> Seq.sortBy(fun x -> x.ToLower())
+            for package in symbolPackages do
+                try
+                    publishPackage (getBuildParam "symbolspublishurl") (getBuildParam "symbolskey") 3 package
+                with exn ->
+                    printfn "%s" exn.Message
+)
+
+
+//--------------------------------------------------------------------------------
+// DocFx targets
+//--------------------------------------------------------------------------------
+
+Target "DocFx" (fun _ ->
+    let docFxToolPath = findToolInSubPath "docfx.exe" "./tools/docfx.console/tools" 
+    let docsPath = "./docs"
+
+    DocFx (fun p -> 
+                { p with 
+                    Timeout = TimeSpan.FromMinutes 5.0; 
+                    WorkingDirectory  = docsPath; 
+                    DocFxJson = docsPath @@ "docfx.json" })
+)
+
+
+//--------------------------------------------------------------------------------
 // Help 
 //--------------------------------------------------------------------------------
 
@@ -152,6 +315,10 @@ Target "All" DoNothing
 
 // tests dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
+
+// nuget dependencies
+"Clean" ==> "RestorePackages" ==> "BuildRelease" ==> "CreateNuget"
+"CreateNuget" ==> "PublishNuget" ==> "Nuget"
 
 // all
 "BuildRelease" ==> "All"
