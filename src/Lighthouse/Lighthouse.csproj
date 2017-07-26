@@ -126,6 +126,7 @@
     </None>
     <None Include="install\install-lighthouse.cmd" />
     <None Include="install\uninstall-lighthouse.cmd" />
+    <None Include="Lighthouse.nuspec" />
     <None Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
