@@ -1,23 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.13
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{65FB6FB1-A0CF-4223-AA47-F4BD29A1D337}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{65FB6FB1-A0CF-4223-AA47-F4BD29A1D337}"
 	ProjectSection(SolutionItems) = preProject
-		build-docker-image.ps1 = build-docker-image.ps1
-		build.fsx = build.fsx
-		build.ps1 = build.ps1
-		Dockerfile = Dockerfile
+		..\build-docker-image.ps1 = ..\build-docker-image.ps1
+		..\Dockerfile = ..\Dockerfile
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusterBootstrapper.Lighthouse", "src\ClusterBootstrapper.Lighthouse\ClusterBootstrapper.Lighthouse.csproj", "{7A69405E-EEA8-443D-A96A-AF79B3936B24}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusterBootstrapper.Lighthouse", "ClusterBootstrapper.Lighthouse\ClusterBootstrapper.Lighthouse.csproj", "{7A69405E-EEA8-443D-A96A-AF79B3936B24}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusterBootstrapper.Lighthouse.Tests", "src\ClusterBootstrapper.Lighthouse.Tests\ClusterBootstrapper.Lighthouse.Tests.csproj", "{B0A7C640-8034-4FE3-A716-60F0EB5977A2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusterBootstrapper.Lighthouse.Tests", "ClusterBootstrapper.Lighthouse.Tests\ClusterBootstrapper.Lighthouse.Tests.csproj", "{B0A7C640-8034-4FE3-A716-60F0EB5977A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.Tests", "src\Lighthouse.Tests\Lighthouse.Tests.csproj", "{4BE9C614-25ED-4B95-B548-9B45CC99883A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.Tests", "Lighthouse.Tests\Lighthouse.Tests.csproj", "{4BE9C614-25ED-4B95-B548-9B45CC99883A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
