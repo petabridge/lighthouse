@@ -1,0 +1,1 @@
+﻿docker build -t petabridge/lighthouse:latest .

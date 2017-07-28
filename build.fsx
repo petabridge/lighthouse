@@ -67,13 +67,13 @@ Target "Clean" (fun _ ->
 //--------------------------------------------------------------------------------
 
 Target "RestorePackages" (fun _ ->
-    let solution = "./src/LightHouse.sln"
+    let solution = "./src/Lighthouse.sln"
 
     solution 
     |> RestoreMSSolutionPackages 
         (fun p ->
             { p with
-                OutputPath = "./packages"
+                OutputPath = "./src/packages"
                 Retries = 4 })
 )
 
@@ -281,6 +281,13 @@ Target "DocFx" (fun _ ->
                     DocFxJson = docsPath @@ "docfx.json" })
 )
 
+Target "BuildDockerImage" (fun _ ->
+    let result = ExecProcess (fun info ->
+        info.FileName <- "powershell.exe"
+        info.Arguments <- "./build-docker-image.ps1") (System.TimeSpan.FromMinutes 5.0)
+    enableProcessTracing <- true
+    if result <> 0 then failwith "couldn't build docker image"
+)
 
 //--------------------------------------------------------------------------------
 // Help 
@@ -307,11 +314,15 @@ Target "Help" <| fun _ ->
 //--------------------------------------------------------------------------------
 
 Target "BuildRelease" DoNothing
+Target "Docker" DoNothing
 Target "Nuget" DoNothing
 Target "All" DoNothing
 
 // build dependencies
 "Clean" ==> "RestorePackages" ==> "AssemblyInfo" ==> "Build" ==> "CopyOutput" ==> "BuildRelease"
+
+// docker dependencies
+"BuildRelease"  ==> "BuildDockerImage" ==> "Docker"
 
 // tests dependencies
 "Clean" ==> "RestorePackages" ==> "Build" ==> "RunTests"
