@@ -73,7 +73,7 @@ Target "RestorePackages" (fun _ ->
     |> RestoreMSSolutionPackages 
         (fun p ->
             { p with
-                OutputPath = "./packages"
+                OutputPath = "./src/packages"
                 Retries = 4 })
 )
 

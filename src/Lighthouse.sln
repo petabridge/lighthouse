@@ -13,12 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClusterBootstrapper.Lightho
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{FE6527CB-EC9B-48E8-B3B8-7DAD4EF1CB74}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\build-docker-image.ps1 = ..\..\build-docker-image.ps1
-		..\..\build.cmd = ..\..\build.cmd
-		..\..\build.fsx = ..\..\build.fsx
-		..\..\build.ps1 = ..\..\build.ps1
-		..\..\build.sh = ..\..\build.sh
-		..\..\Dockerfile = ..\..\Dockerfile
+		..\build-docker-image.ps1 = ..\build-docker-image.ps1
+		..\build.cmd = ..\build.cmd
+		..\build.fsx = ..\build.fsx
+		..\build.ps1 = ..\build.ps1
+		..\build.sh = ..\build.sh
 	EndProjectSection
 EndProject
 Global
