@@ -53,18 +53,10 @@ namespace ClusterBootstrapper.Lighthouse.Tests
             var selfIpAddress = "http://172.22.144.3:12345";
 
             var remoteConfig = ClusterNodeConfigurationFactory.CreateRemoteConfig(selfIpAddress);
-            remoteConfig.ToString().Should().Be(@"{
-  akka : {
-    remote : {
-      helios : {
-        tcp : {
-          public-hostname : 172.22.144.3
-          port : 12345
-        }
-      }
-    }
-  }
-}");
+            var publicHostname = remoteConfig.GetString("akka.remote.helios.tcp.public-hostname");
+            var port = remoteConfig.GetInt("akka.remote.helios.tcp.port");
+            publicHostname.Should().Be("172.22.144.3");
+            port.Should().Be(12345);
         }
     }
 
