@@ -1,17 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.13
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7203B852-396D-47D0-A371-1092046A676F}"
-	ProjectSection(SolutionItems) = preProject
-		..\build.cmd = ..\build.cmd
-		..\build.fsx = ..\build.fsx
-		..\build.ps1 = ..\build.ps1
-		..\build.sh = ..\build.sh
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse\Lighthouse.csproj", "{87BE1ABF-1F59-41AB-A3CB-4B1E7E0B218A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
