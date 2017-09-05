@@ -1,0 +1,18 @@
+<Project>
+  <PropertyGroup>
+    <Copyright>Copyright © 2017 Your Company</Copyright>
+    <Authors>Your Authors</Authors>
+    <VersionPrefix>0.1.0</VersionPrefix>
+    <PackageReleaseNotes>First release</PackageReleaseNotes>
+    <PackageIconUrl>
+    </PackageIconUrl>
+    <PackageProjectUrl>
+    </PackageProjectUrl>
+    <PackageLicenseUrl>
+    </PackageLicenseUrl>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <XunitVersion>2.3.0-beta4-*</XunitVersion>
+  </PropertyGroup>
+</Project>
