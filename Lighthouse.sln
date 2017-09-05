@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lighthouse", "src\Lighthous
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lighthouse.Tests", "src\Lighthouse.Tests\Lighthouse.Tests.csproj", "{0F9B9BC6-9F86-40E8-BA9B-D27BF3AC7970}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{183986D1-C1AB-4503-AF06-F2B04A4E51FA}"
+	ProjectSection(SolutionItems) = preProject
+		build.cmd = build.cmd
+		build.fsx = build.fsx
+		build.ps1 = build.ps1
+		build.sh = build.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

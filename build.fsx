@@ -11,10 +11,10 @@ open Fake.DocFxHelper
 
 // Information about the project for Nuget and Assembly info files
 let product = "Lighthouse"
-let authors = [ "Your name here" ]
+let authors = [ "Aaron Stannard" ]
 let copyright = "Copyright © 2017"
-let company = "Your name here"
-let description = "Your description here"
+let company = "Petabridge, LLC"
+let description = "Lighthouse Akka.NET Service Discovery"
 let tags = ["";]
 let configuration = "Release"
 
@@ -265,7 +265,6 @@ Target "Nuget" DoNothing
 // all
 "BuildRelease" ==> "All"
 "RunTests" ==> "All"
-//"NBench" ==> "All"
 "Nuget" ==> "All"
 
 RunTargetOrDefault "Help"
