@@ -1,43 +1,61 @@
 # Lighthouse
 
-Update this readme file with your details.
+**Lighthouse** is a simple service-discovery tool for Akka.Cluster, designed to make it easier to place nice with PaaS deployments like Azure / Elastic Beanstalk / AppHarbor.
 
-## Building this solution
-To run the build script associated with this solution, execute the following:
+## Running on .NET 4.5
 
-**Windows**
-```
-c:\> build.cmd all
-```
-
-**Linux / OS X**
-```
-c:\> build.sh all
-```
-
-If you need any information on the supported commands, please execute the `build.[cmd|sh] help` command.
-
-This build script is powered by [FAKE](https://fake.build/); please see their API documentation should you need to make any changes to the [`build.fsx`](build.fsx) file.
-
-### Conventions
-The attached build script will automatically do the following based on the conventions of the project names added to this project:
-
-* Any project name ending with `.Tests` will automatically be treated as a [XUnit2](https://xunit.github.io/) project and will be included during the test stages of this build script;
-* Any project name ending with `.Tests` will automatically be treated as a [NBench](https://github.com/petabridge/NBench) project and will be included during the test stages of this build script; and
-* Any project meeting neither of these conventions will be treated as a NuGet packaging target and its `.nupkg` file will automatically be placed in the `bin\nuget` folder upon running the `build.[cmd|sh] all` command.
-
-### DocFx for Documentation
-This solution also supports [DocFx](http://dotnet.github.io/docfx/) for generating both API documentation and articles to describe the behavior, output, and usages of your project. 
-
-All of the relevant articles you wish to write should be added to the `/docs/articles/` folder and any API documentation you might need will also appear there.
-
-All of the documentation will be statically generated and the output will be placed in the `/docs/_site/` folder. 
-
-### Release Notes, Version Numbers, Etc
-This project will automatically populate its release notes in all of its modules via the entries written inside [`RELEASE_NOTES.md`](RELEASE_NOTES.md) and will automatically update the versions of all assemblies and NuGet packages via the metadata included inside [`common.props`](src/common.props).
-
-If you add any new projects to the solution created with this template, be sure to add the following line to each one of them in order to ensure that you can take advantage of `common.props` for standardization purposes:
+Lighthouse runs on [Akka.NET](https://github.com/akkadotnet/akka.net) version 1.3.1, which supports .NET 4.5 and .NET Core 1.1/.NET Standard 1.6.  To package the executable and run the .NET 4.5 version locally, clone this repo and build the `Lighthouse` project.  Running Lighthouse.exe in a console should produce an output similar to this:
 
 ```
-<Import Project="..\common.props" />
+Topshelf.HostFactory: Configuration Result:
+[Success] Name Lighthouse
+[Success] DisplayName Lighthouse Service Discovery
+[Success] Description Lighthouse Service Discovery for Akka.NET Clusters
+[Success] ServiceName Lighthouse
+Topshelf.HostConfigurators.HostConfiguratorImpl: Topshelf v3.2.150.0, .NET Framework v4.0.30319.42000
 ```
+
+The Lighthouse .NET 4.5 project is built as a [Topshelf](https://github.com/Topshelf/Topshelf) service.  This allows you to install Lighthouse as a Windows Service using a command like this:
+
+```
+Lighthouse.exe install --localsystem --autostart
+```
+
+See the Topshelf documentation for more info on command line arguments for installing a Topshelf service.
+
+# Running on .NET Core
+
+Lighthouse also includes a .NET Core-compatible version under a separate project named `Lighthouse.NetCoreApp`.  This project does not build as a Topshelf web service.  You have 2 ways that you can run this version:
+
+- using the .NET CLI
+- building the project as a standalone .exe for your specific [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
+
+#### Using the .NET CLI
+
+Build the project either in Visual Studio 2017 or using `dotnet build -c Release Lighthouse.NetCoreApp.csproj`.  This will output `Lighthouse.NetCoreApp.dll` in your `bin/Release` folder.  From there, running `dotnet ./Lighthouse.NetCoreApp.dll` will start Lighthouse.  Pressing `Enter` will exit.
+
+#### Building the project as an .exe
+
+You need to restore the dependencies for the target runtime identifier that you want to build the executable for:
+
+```
+dotnet restore -r win7-x64
+```
+
+Then, you may publish the executable using the command:
+
+```
+dotnet publish -c Release -r win7-x64 -f netcoreapp1.1
+```
+
+This will include a `publish` folder in your bin directory that will include the .exe and the .NET Core runtime dependencies:
+
+```
+bin/
+	Release/
+		netcoreapp1.1/
+			win7-x64/
+				publish/
+					Lighthouse.NetCoreApp.exe
+```
+
