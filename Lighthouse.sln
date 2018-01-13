@@ -17,6 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{183986D1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.NetCoreApp", "src\Lighthouse.NetCoreApp\Lighthouse.NetCoreApp.csproj", "{68DA756A-9D3D-4C7E-AA07-8741D2DE0B95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse2\Lighthouse.csproj", "{EFB49E56-91D0-4EA1-BA87-035C863CABE0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,6 +37,10 @@ Global
 		{68DA756A-9D3D-4C7E-AA07-8741D2DE0B95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{68DA756A-9D3D-4C7E-AA07-8741D2DE0B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{68DA756A-9D3D-4C7E-AA07-8741D2DE0B95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFB49E56-91D0-4EA1-BA87-035C863CABE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFB49E56-91D0-4EA1-BA87-035C863CABE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFB49E56-91D0-4EA1-BA87-035C863CABE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFB49E56-91D0-4EA1-BA87-035C863CABE0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
