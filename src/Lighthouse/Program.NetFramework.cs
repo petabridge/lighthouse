@@ -11,8 +11,8 @@ namespace Lighthouse
         {
             HostFactory.Run(x =>
             {
-                x.SetServiceName("UIS Lighthouse");
-                x.SetDisplayName("UIS Lighthouse");
+                x.SetServiceName("Lighthouse");
+                x.SetDisplayName("Lighthouse");
                 x.SetDescription("Seed node for the Akka Cluster");
 
                 x.UseAssemblyInfoForServiceInfo();

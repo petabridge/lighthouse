@@ -1,25 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\common.props" />
   <PropertyGroup>
-    <TargetFramework>net45</TargetFramework>
     <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Akka" Version="1.3.2" />
-    <PackageReference Include="Akka.Cluster" Version="1.3.1" />
+    <PackageReference Include="Akka.Cluster" Version="1.3.2" />
     <PackageReference Include="Akka.Logger.NLog" Version="1.3.0-beta" />
-    <PackageReference Include="Akka.Remote" Version="1.3.1" />
-    <PackageReference Include="Topshelf" Version="3.2.0" />
-    <PackageReference Include="Topshelf.NLog" Version="3.2.0" />
+    <PackageReference Include="Akka.Remote" Version="1.3.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="1.1.2" />
+  </ItemGroup>
+  <!-- Conditionally obtain references for .NET Framework 4.5.2 -->
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
+    <PackageReference Include="Topshelf" Version="4.0.3" />
+    <PackageReference Include="Topshelf.NLog" Version="4.0.3" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="System.Configuration" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="App.config">
+    <None Update="akka.hocon">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="NLog.config">
+    <None Update="nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

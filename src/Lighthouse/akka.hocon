@@ -5,6 +5,12 @@ lighthouse{
 akka {
   actor {
     provider = "Akka.Cluster.ClusterActorRefProvider, Akka.Cluster"
+    serializers {
+      hyperion = "Akka.Serialization.HyperionSerializer, Akka.Serialization.Hyperion"
+    }
+    serialization-bindings {
+      "System.Object" = hyperion
+    }
   }
   
   remote {
@@ -20,13 +26,11 @@ akka {
     }
   }            
 
-  loggers = ["Akka.Logger.NLog.NLogLogger, Akka.Logger.NLog"]
+  # loggers = ["Akka.Logger.Serilog.SerilogLogger,Akka.Logger.Serilog"]
 
   cluster {
-    # will inject this node as a self-seed node at run-time.
-    # manually populate other seed nodes here.
-    # i.e. seed-nodes = ["akka.tcp://lighthouse@127.0.0.1:4053", "akka.tcp://lighthouse@127.0.0.1:4044"]
+    #will inject this node as a self-seed node at run-time
     seed-nodes = [] 
-    roles = [lighthouse]
+    roles = [seed-node]
   }
 }
