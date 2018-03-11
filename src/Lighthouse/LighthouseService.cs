@@ -13,6 +13,8 @@
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.Cluster;
+using Petabridge.Cmd.Cluster;
+using Petabridge.Cmd.Host;
 
 namespace Lighthouse
 {
@@ -34,6 +36,9 @@ namespace Lighthouse
         public void Start()
         {
             _lighthouseSystem = LighthouseHostFactory.LaunchLighthouse(_ipAddress, _port);
+            var pbm = PetabridgeCmd.Get(_lighthouseSystem);
+            pbm.RegisterCommandPalette(ClusterCommands.Instance); // enable cluster management commands
+            pbm.Start();
         }
 
         public async Task StopAsync()
