@@ -28,7 +28,6 @@ namespace Lighthouse
                     sc.WhenStopped(s => s.StopAsync().Wait());
                 });
 
-                x.UseNLog();
                 x.EnableServiceRecovery(r => r.RestartService(1));
             });
         }

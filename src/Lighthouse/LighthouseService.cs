@@ -26,8 +26,7 @@ namespace Lighthouse
 
         public async Task StopAsync()
         {
-            await Cluster.Get(_lighthouseSystem).LeaveAsync();
-            await _lighthouseSystem.Terminate();
+            await CoordinatedShutdown.Get(_lighthouseSystem).Run();
         }
     }
 }
