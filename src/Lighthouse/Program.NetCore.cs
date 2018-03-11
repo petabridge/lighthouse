@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Threading.Tasks;
 
-namespace Lighthouse.NetCoreApp
+namespace Lighthouse
 {
-    class Program
+    public partial class Program
     {
-        static void Main(string[] args)
+#if NETCOREAPP1_1
+        public static void Main(string[] args)
         {
             var lighthouseService = new LighthouseService();
             lighthouseService.Start();
             Console.ReadLine();
             lighthouseService.StopAsync().Wait();
         }
+#endif
     }
 }

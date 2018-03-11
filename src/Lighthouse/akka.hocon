@@ -1,0 +1,36 @@
+lighthouse{
+  actorsystem: "actor-system" #POPULATE NAME OF YOUR ACTOR SYSTEM HERE
+}
+
+akka {
+  actor {
+    provider = "Akka.Cluster.ClusterActorRefProvider, Akka.Cluster"
+    serializers {
+      hyperion = "Akka.Serialization.HyperionSerializer, Akka.Serialization.Hyperion"
+    }
+    serialization-bindings {
+      "System.Object" = hyperion
+    }
+  }
+  
+  remote {
+    log-remote-lifecycle-events = DEBUG
+    dot-netty.tcp {
+      transport-class = "Akka.Remote.Transport.DotNetty.TcpTransport, Akka.Remote"
+      applied-adapters = []
+      transport-protocol = tcp
+      #will be populated with a dynamic host-name at runtime if left uncommented
+      #public-hostname = "POPULATE STATIC IP HERE"
+      hostname = "0.0.0.0"
+      port = 4053
+    }
+  }            
+
+  # loggers = ["Akka.Logger.Serilog.SerilogLogger,Akka.Logger.Serilog"]
+
+  cluster {
+    #will inject this node as a self-seed node at run-time
+    seed-nodes = [] 
+    roles = [seed-node]
+  }
+}
