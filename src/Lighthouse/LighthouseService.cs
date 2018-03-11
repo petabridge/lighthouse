@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Akka.Actor;
+using Akka.Cluster;
 
 namespace Lighthouse
 {
@@ -25,7 +26,7 @@ namespace Lighthouse
 
         public async Task StopAsync()
         {
-            await _lighthouseSystem.Terminate();
+            await CoordinatedShutdown.Get(_lighthouseSystem).Run();
         }
     }
 }
