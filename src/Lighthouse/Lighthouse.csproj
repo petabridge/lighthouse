@@ -4,11 +4,10 @@
     <TargetFrameworks>netcoreapp1.1;net452</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Akka" Version="1.3.2" />
-    <PackageReference Include="Akka.Cluster" Version="1.3.2" />
-    <PackageReference Include="Akka.Remote" Version="1.3.2" />
+    <PackageReference Include="Akka.Cluster" Version="1.3.5" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="1.1.2" />
+    <PackageReference Include="Petabridge.Cmd.Cluster" Version="0.3.3" />
   </ItemGroup>
   <!-- Conditionally obtain references for .NET Framework 4.5.2 -->
   <ItemGroup Condition=" '$(TargetFramework)' == 'net452' ">
