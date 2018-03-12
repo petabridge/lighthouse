@@ -41,6 +41,14 @@ namespace Lighthouse
             pbm.Start();
         }
 
+        /// <summary>
+        /// Task completes once the Lighthouse <see cref="ActorSystem"/> has terminated.
+        /// </summary>
+        /// <remarks>
+        /// Doesn't actually invoke termination. Need to call <see cref="StopAsync"/> for that.
+        /// </remarks>
+        public Task TerminationHandle => _lighthouseSystem.WhenTerminated;
+
         public async Task StopAsync()
         {
             await CoordinatedShutdown.Get(_lighthouseSystem).Run();
