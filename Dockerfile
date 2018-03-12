@@ -1,15 +1,14 @@
-FROM microsoft/aspnetcore-build:1.1 AS build-env
+FROM microsoft/dotnet:1.1-sdk AS build-env
 WORKDIR /app
 
-COPY *.sln .
-COPY src/Lighthouse/*.csproj ./src/Lighthouse
+COPY src/Lighthouse/*.csproj ./
 RUN dotnet restore
 
-COPY . ./
-WORKDIR /app/src/Lighthouse
+COPY src/Lighthouse ./
 RUN dotnet publish -c Release --framework netcoreapp1.1 -o out
 
-FROM microsoft/aspnetcore:1.1
-WORKDIR /app/src/Lighthouse
-COPY --from=build-env /app/src/Lighthouse/out .
-ENTRYPOINT ["dotnet", "lighthouse.dll"]
+FROM microsoft/dotnet:1.1-runtime AS runtime
+WORKDIR /app
+COPY --from=build-env /app/out ./
+RUN ls
+ENTRYPOINT ["dotnet", "Lighthouse.dll"]
