@@ -9,7 +9,6 @@ ENV SEEDS "[]"
 COPY src/Lighthouse/*.csproj ./
 RUN dotnet restore
 
-RUN ls
 COPY src/Lighthouse ./
 RUN dotnet publish -c Release --framework netcoreapp1.1 -o out
 
