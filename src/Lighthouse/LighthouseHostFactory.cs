@@ -1,20 +1,8 @@
-﻿// Copyright 2014-2015 Aaron Stannard, Petabridge LLC
-//  
-// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
-// this file except in compliance with the License. You may obtain a copy of the 
-// License at 
-// 
-//     http://www.apache.org/licenses/LICENSE-2.0 
-// 
-// Unless required by applicable law or agreed to in writing, software distributed 
-// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
-// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
-// specific language governing permissions and limitations under the License.
-using System.Configuration;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Akka.Actor;
 using Akka.Configuration;
-using Akka.Configuration.Hocon;
 using ConfigurationException = Akka.Configuration.ConfigurationException;
 
 namespace Lighthouse
@@ -24,14 +12,12 @@ namespace Lighthouse
     /// </summary>
     public static class LighthouseHostFactory
     {
-        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null)
+        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null, string systemName = null)
         {
-            var systemName = "lighthouse";
-            var section = (AkkaConfigurationSection)ConfigurationManager.GetSection("akka");
-            var clusterConfig = section.AkkaConfig;
+            var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon"));
 
             var lighthouseConfig = clusterConfig.GetConfig("lighthouse");
-            if (lighthouseConfig != null)
+            if (lighthouseConfig != null && string.IsNullOrEmpty(systemName))
             {
                 systemName = lighthouseConfig.GetString("actorsystem", systemName);
             }
@@ -42,9 +28,18 @@ namespace Lighthouse
                         "127.0.0.1"; //localhost as a final default
             int port = specifiedPort ?? remoteConfig.GetInt("dot-netty.tcp.port");
 
-            if(port == 0) throw new ConfigurationException("Need to specify an explicit port for Lighthouse. Found an undefined port or a port value of 0 in App.config.");
+            if (port == 0) throw new ConfigurationException("Need to specify an explicit port for Lighthouse. Found an undefined port or a port value of 0 in App.config.");
 
-            var selfAddress = string.Format("akka.tcp://{0}@{1}:{2}", systemName, ipAddress, port);
+            var selfAddress = $"akka.tcp://{systemName}@{ipAddress}:{port}";
+
+            /*
+             * Sanity check
+             */
+            Console.WriteLine($"[Lighthouse] ActorSystem: {systemName}; IP: {ipAddress}; PORT: {port}");
+            Console.WriteLine("[Lighthouse] Performing pre-boot sanity check. Should be able to parse address [{0}]", selfAddress);
+            selfAddress = new Address("akka.tcp", systemName, ipAddress.Trim(), port).ToString();
+            Console.WriteLine("[Lighthouse] Parse successful.");
+
             var seeds = clusterConfig.GetStringList("akka.cluster.seed-nodes");
             if (!seeds.Contains(selfAddress))
             {
