@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using Akka.Actor;
 using Akka.Configuration;
@@ -11,13 +12,12 @@ namespace Lighthouse
     /// </summary>
     public static class LighthouseHostFactory
     {
-        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null)
+        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null, string systemName = null)
         {
-            var systemName = "lighthouse";
             var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon"));
 
             var lighthouseConfig = clusterConfig.GetConfig("lighthouse");
-            if (lighthouseConfig != null)
+            if (lighthouseConfig != null && string.IsNullOrEmpty(systemName))
             {
                 systemName = lighthouseConfig.GetString("actorsystem", systemName);
             }
@@ -30,7 +30,16 @@ namespace Lighthouse
 
             if (port == 0) throw new ConfigurationException("Need to specify an explicit port for Lighthouse. Found an undefined port or a port value of 0 in App.config.");
 
-            var selfAddress = string.Format("akka.tcp://{0}@{1}:{2}", systemName, ipAddress, port);
+            var selfAddress = $"akka.tcp://{systemName}@{ipAddress}:{port}";
+
+            /*
+             * Sanity check
+             */
+            Console.WriteLine($"[Lighthouse] ActorSystem: {systemName}; IP: {ipAddress}; PORT: {port}");
+            Console.WriteLine("[Lighthouse] Performing pre-boot sanity check. Should be able to parse address [{0}]", selfAddress);
+            selfAddress = new Address("akka.tcp", systemName, ipAddress.Trim(), port).ToString();
+            Console.WriteLine("[Lighthouse] Parse successful.");
+
             var seeds = clusterConfig.GetStringList("akka.cluster.seed-nodes");
             if (!seeds.Contains(selfAddress))
             {

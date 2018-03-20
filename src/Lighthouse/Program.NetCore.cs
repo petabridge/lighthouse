@@ -9,8 +9,12 @@ namespace Lighthouse
         {
             var lighthouseService = new LighthouseService();
             lighthouseService.Start();
-            Console.ReadLine();
-            lighthouseService.StopAsync().Wait();
+            Console.WriteLine("Press Control + C to terminate.");
+            Console.CancelKeyPress += async (sender, eventArgs) =>
+            {
+                await lighthouseService.StopAsync();
+            };
+            lighthouseService.TerminationHandle.Wait(); 
         }
 #endif
     }
