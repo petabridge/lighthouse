@@ -28,12 +28,7 @@ namespace Lighthouse
 
         private ActorSystem _lighthouseSystem;
 
-        /*
-        * var ipAddress = ;
-            var actorSystemName = Environment.GetEnvironmentVariable("actorSystemName"); 
-        */
-
-        public LighthouseService() : this(Environment.GetEnvironmentVariable("CONTAINER_IP"), null, Environment.GetEnvironmentVariable("ACTORSYSTEM")) { }
+        public LighthouseService() : this(null, null, null) { }
 
         public LighthouseService(string ipAddress, int? port, string actorSystemName)
         {
