@@ -14,6 +14,17 @@ namespace Lighthouse
     {
         public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null, string systemName = null)
         {
+            systemName = systemName ?? Environment.GetEnvironmentVariable("ACTORSYSTEM")?.Trim();
+            ipAddress = ipAddress ?? Environment.GetEnvironmentVariable("CLUSTER_IP")?.Trim();
+            if (specifiedPort == null)
+            {
+                var envPort = Environment.GetEnvironmentVariable("CLUSTER_PORT")?.Trim();
+                if (!string.IsNullOrEmpty(envPort) && int.TryParse(envPort, out var actualPort))
+                {
+                    specifiedPort = actualPort;
+                }
+            }
+
             var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon"));
 
             var lighthouseConfig = clusterConfig.GetConfig("lighthouse");
@@ -23,9 +34,13 @@ namespace Lighthouse
             }
 
             var remoteConfig = clusterConfig.GetConfig("akka.remote");
-            ipAddress = ipAddress ??
-                        remoteConfig.GetString("dot-netty.tcp.public-hostname") ??
-                        "127.0.0.1"; //localhost as a final default
+
+            if (string.IsNullOrEmpty(ipAddress))
+            {
+                ipAddress = remoteConfig.GetString("dot-netty.tcp.public-hostname") ??
+                            "127.0.0.1"; //localhost as a final default
+            }
+           
             int port = specifiedPort ?? remoteConfig.GetInt("dot-netty.tcp.port");
 
             if (port == 0) throw new ConfigurationException("Need to specify an explicit port for Lighthouse. Found an undefined port or a port value of 0 in App.config.");
@@ -40,7 +55,19 @@ namespace Lighthouse
             selfAddress = new Address("akka.tcp", systemName, ipAddress.Trim(), port).ToString();
             Console.WriteLine("[Lighthouse] Parse successful.");
 
+            var clusterSeeds = Environment.GetEnvironmentVariable("CLUSTER_SEEDS")?.Trim();
+
             var seeds = clusterConfig.GetStringList("akka.cluster.seed-nodes");
+            if (!string.IsNullOrEmpty(clusterSeeds))
+            {
+                var tempSeeds = clusterSeeds.Trim('[', ']').Split(',');
+                if (tempSeeds.Any())
+                {
+                    seeds = tempSeeds;
+                }
+            }
+
+           
             if (!seeds.Contains(selfAddress))
             {
                 seeds.Add(selfAddress);
