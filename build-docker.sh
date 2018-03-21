@@ -12,5 +12,7 @@ fi
 docker build -t petabridge/lighthouse:netcore1.1 -t petabridge/lighthouse:${release_tag} -t petabridge/lighthouse:latest .
 
 if [ -z "$DOCKER_PUSH"]; then
+	echo "not pushing"
+else
 	docker push petabridge/lighthouse
 fi
