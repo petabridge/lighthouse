@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2017 Your Company</Copyright>
-    <Authors>Your Authors</Authors>
+    <Copyright>Copyright © 2015-2018 Petabridge, LLC</Copyright>
+    <Authors>Petabridge</Authors>
     <VersionPrefix>0.9.1</VersionPrefix>
     <PackageReleaseNotes>First Dockerized release of Lighthouse intended for mainstream consumption.
 You can [access Petabridge's public Lighthouse Docker images for Akka.Cluster here](https://hub.docker.com/r/petabridge/lighthouse).</PackageReleaseNotes>
