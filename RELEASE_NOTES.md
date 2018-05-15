@@ -1,3 +1,6 @@
+#### 0.9.2 May 15 2018 ####
+Upgraded to Akka.NET 1.3.7.
+
 #### 0.9.1 March 21 2018 ####
 First Dockerized release of Lighthouse intended for mainstream consumption.
 
