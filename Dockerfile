@@ -1,4 +1,4 @@
-FROM microsoft/dotnet:1.1-sdk AS build-env
+FROM microsoft/dotnet:2.1-sdk AS build-env
 WORKDIR /app
 
 ENV ACTORSYSTEM "lighthouse"
@@ -10,9 +10,9 @@ COPY src/Lighthouse/*.csproj ./
 RUN dotnet restore
 
 COPY src/Lighthouse ./
-RUN dotnet publish -c Release --framework netcoreapp1.1 -o out
+RUN dotnet publish -c Release --framework netcoreapp2.1 -o out
 
-FROM microsoft/dotnet:1.1-runtime AS runtime
+FROM microsoft/dotnet:2.1-runtime AS runtime
 WORKDIR /app
 COPY --from=build-env /app/out ./
 COPY --from=build-env /app/get-dockerip.sh ./get-dockerip.sh
