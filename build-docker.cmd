@@ -13,7 +13,7 @@ if [%1]==[] (
 
 echo "Using release tag verison %release_tag%"
 
-docker build -t petabridge/lighthouse:netcore1.1 -t "petabridge/lighthouse:%release_tag%" -t petabridge/lighthouse:latest .
+docker build -t petabridge/lighthouse:netcore2.1 -t "petabridge/lighthouse:%release_tag%" -t petabridge/lighthouse:latest .
 
 if defined DOCKER_PUSH (
 	docker push petabridge/lighthouse

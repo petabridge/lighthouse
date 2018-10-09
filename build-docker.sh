@@ -9,7 +9,7 @@ else
   release_tag=$1
 fi
 
-docker build -t petabridge/lighthouse:netcore1.1 -t petabridge/lighthouse:${release_tag} -t petabridge/lighthouse:latest .
+docker build -t petabridge/lighthouse:netcore2.1 -t petabridge/lighthouse:${release_tag} -t petabridge/lighthouse:latest .
 
 if [ -z "$DOCKER_PUSH"]; then
 	echo "not pushing"
