@@ -60,7 +60,7 @@ namespace Lighthouse
             var seeds = clusterConfig.GetStringList("akka.cluster.seed-nodes");
             if (!string.IsNullOrEmpty(clusterSeeds))
             {
-                var tempSeeds = clusterSeeds.Trim('[', ']').Split(',');
+                var tempSeeds = clusterSeeds.Trim('[', ']').Split(',').ToList();
                 if (tempSeeds.Any())
                 {
                     seeds = tempSeeds;
