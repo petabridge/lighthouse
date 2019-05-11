@@ -1,4 +1,4 @@
-﻿// Copyright 2014-2015 Aaron Stannard, Petabridge LLC
+﻿// Copyright 2014-2019 Aaron Stannard, Petabridge LLC
 //  
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
