@@ -16,7 +16,7 @@
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
     <MicrosoftSdkVersion>15.9.0</MicrosoftSdkVersion>
-    <NetCoreVersion>netcoreapp2.1</NetCoreLibVersion>
+    <NetCoreVersion>netcoreapp2.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net452</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
