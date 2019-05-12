@@ -17,6 +17,7 @@ using Akka.Actor;
 using Akka.Cluster;
 using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Host;
+using Petabridge.Cmd.Remote;
 
 namespace Lighthouse
 {
@@ -41,7 +42,8 @@ namespace Lighthouse
         {
             _lighthouseSystem = LighthouseHostFactory.LaunchLighthouse(_ipAddress, _port, _actorSystemName);
             var pbm = PetabridgeCmd.Get(_lighthouseSystem);
-            pbm.RegisterCommandPalette(ClusterCommands.Instance); // enable cluster management commands
+            pbm.RegisterCommandPalette(ClusterCommands.Instance); // enable Akka.Cluster management commands
+            pbm.RegisterCommandPalette(RemoteCommands.Instance); // enable Akka.Remote management commands
             pbm.Start();
         }
 
@@ -55,7 +57,7 @@ namespace Lighthouse
 
         public async Task StopAsync()
         {
-            await CoordinatedShutdown.Get(_lighthouseSystem).Run();
+            await CoordinatedShutdown.Get(_lighthouseSystem).Run(CoordinatedShutdown.ClrExitReason.Instance);
         }
     }
 }
