@@ -4,7 +4,7 @@ namespace Lighthouse
 {
     public partial class Program
     {
-#if NETCOREAPP1_1
+#if CORECLR
         public static void Main(string[] args)
         {
             var lighthouseService = new LighthouseService();
