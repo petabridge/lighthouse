@@ -14,6 +14,11 @@
   <ItemGroup Condition=" '$(TargetFramework)' == '$(NetFrameworkLibVersion)' ">
     <PackageReference Include="Topshelf" Version="4.0.3" />
   </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == '$(NetCoreVersion)' ">
+    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Update="akka.hocon">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

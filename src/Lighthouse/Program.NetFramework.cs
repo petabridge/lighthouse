@@ -1,4 +1,4 @@
-﻿#if NET452
+﻿#if !CORECLR
 using Topshelf;
 #endif
 
@@ -6,7 +6,7 @@ namespace Lighthouse
 {
     public partial class Program
     {
-#if NET452
+#if !CORECLR
         public static void Main(string[] args)
         {
             HostFactory.Run(x =>
