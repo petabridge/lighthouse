@@ -96,16 +96,6 @@ jobs:
           artifactName: 'drop'
           itemPattern: drop/**
           downloadPath: '$(Agent.BuildDirectory)'
-      - task: CopyFiles@2
-        displayName: 'Copy into working directory'
-        inputs:
-          sourceFolder: $(Build.StagingDirectory)/drop
-          targetFolder: $(Agent.BuildDirectory)
-      - task: CmdLine@2
-        displayName: "DEBUG: list contents"
-        inputs:
-          workingDirectory: $(Agent.BuildDirectory)
-          script: dir
       - task: Docker@2
         displayName: "Login to Docker Hub"
         inputs:
@@ -114,8 +104,8 @@ jobs:
       - task: Docker@2
         displayName: Docker Build (Windows)
         inputs:
-          command: build
-          Dockerfile: $(Agent.BuildDirectory)/Dockerfile-windows
+          command: buildAndPush
+          Dockerfile: $(Agent.BuildDirectory)/drop/Dockerfile-windows
           repository: petabridge/lighthouse
           tags: |
             latest
