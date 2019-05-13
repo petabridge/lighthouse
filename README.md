@@ -2,59 +2,53 @@
 
 **Lighthouse** is a simple service-discovery tool for Akka.Cluster, designed to make it easier to play nice with PaaS deployments like Azure / Elastic Beanstalk / AppHarbor.
 
-## Running on .NET 4.5.2
+The way it works: Lighthouse runs on a static address and _is not updated during deployments of your other Akka.Cluster services_. You don't treat it like the rest of your services. It just stays there as a fixed entry point into the cluster while the rest of your application gets deployed, redeployed, scaled up, scaled down, and so on around it. This eliminates the complexity of traditional service discovery apparatuses by relying on Akka.Cluster's own built-in protocols to do the heavy lifting.
 
-Lighthouse runs on [Akka.NET](https://github.com/akkadotnet/akka.net) version 1.3.1, which supports .NET 4.5.2 and .NET Core 1.1/.NET Standard 1.6.  To package the executable and run the .NET 4.5.2 version locally, clone this repo and build the `Lighthouse` project.  Running Lighthouse.exe in a console should produce an output similar to this:
+If you do need to make an update to Lighthouse, here are some cases where that might make sense:
 
+1. To upgrade Akka.NET itself;
+2. To install additional [Petabridge.Cmd](https://cmd.petabridge.com/) modules;
+3. To change the Akka.Remote serialization format (since that affects how Lighthouse communicates with the rest of your Akka.NET cluster); or
+4. To install additional monitoring or tracing tools, such as [Phobos](https://phobos.petabridge.com/).
+
+## Running Lighthouse
+The easiest way to run Lighthouse is via [Petabridge's official Lighthouse Docker images on Docker Hub](https://hub.docker.com/r/petabridge/lighthouse):
+
+
+**Linux Images**
 ```
-Topshelf.HostFactory: Configuration Result:
-[Success] Name Lighthouse
-[Success] DisplayName Lighthouse Service Discovery
-[Success] Description Lighthouse Service Discovery for Akka.NET Clusters
-[Success] ServiceName Lighthouse
-Topshelf.HostConfigurators.HostConfiguratorImpl: Topshelf v3.2.150.0, .NET Framework v4.0.30319.42000
-```
-
-The Lighthouse .NET 4.5.2 project is built as a [Topshelf](https://github.com/Topshelf/Topshelf) service.  This allows you to install Lighthouse as a Windows Service using a command like this:
-
-```
-Lighthouse.exe install --localsystem --autostart
-```
-
-See the Topshelf documentation for more info on command line arguments for installing a Topshelf service.
-
-# Running on .NET Core
-
-Lighthouse also targets the .NET Core 1.1 framework. When building for this target framwork it does not get built as a Topshelf windows service.  You have 2 ways that you can run this version:
-
-- using the .NET CLI
-- building the project as a standalone .exe for your specific [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
-
-#### Using the .NET CLI
-
-Build the project either in Visual Studio 2017 or using `dotnet build -c Release --framework netcoreapp1.1 Lighthouse.csproj`.  This will output `Lighthouse.dll` in your `bin/Release/netcoreapp1.1` folder.  From there, running `dotnet run ./Lighthouse.csproj --framework netcoreapp1.1` will start Lighthouse.  Pressing `Enter` will exit.
-
-#### Building the project as an .exe
-
-You need to restore the dependencies for the target runtime identifier that you want to build the executable for:
-
-```
-dotnet restore -r win7-x64
+docker pull petabridge/lighthouse:linux-latest
 ```
 
-Then, you may publish the executable using the command:
+**Windows Images**
+```
+docker pull petabridge/lighthouse:windows-latest
+```
+
+All of these images run lighthouse on top of .NET Core 2.1 and expose the Akka.Cluster TCP endpoint on port 4053 by default. These images also come with [`Petabridge.Cmd.Host` installed](https://cmd.petabridge.com/articles/install/host-configuration.html) and exposed on TCP port 9110.
+
+> Linux images also come with [the `pbm` client](https://cmd.petabridge.com/articles/install/index.html) installed as a global .NET Core tool, so you can remotely execute `pbm` commands inside the containers themselves without exposing `Petabridge.Cmd.Host` over the network. 
+>
+> This feature will be added to Windows container images as soon as [#80](https://github.com/petabridge/lighthouse/issues/80) is resolved.
+
+### Environment Variables
+Lighthouse configures itself largely through [the use of `Akka.Bootstrap.Docker`'s environment variables](https://github.com/petabridge/akkadotnet-bootstrap/tree/dev/src/Akka.Bootstrap.Docker#bootstrapping-your-akkanet-applications-with-docker):
+
+* `ACTORSYSTEM` - the name of the `ActorSystem` Lighthouse will use to join the network.
+* `CLUSTER_IP` - this value will replace the `akka.remote.dot-netty.tcp.public-hostname` at runtime. If this value is not provided, we will use `Dns.GetHostname()` instead.
+* `CLUSTER_PORT` - the port number that will be used by Akka.Remote for inbound connections.
+* `CLUSTER_SEEDS` - a comma-delimited list of seed node addresses used by Akka.Cluster. Here's [an example](https://github.com/petabridge/Cluster.WebCrawler/blob/9f854ff2bfb34464769f562936183ea7719da4ea/yaml/k8s-tracker-service.yaml#L46-L47). _Lighthouse will inject it's own address into this list at startup if it's not already present_.
+
+Here's an example of running a single Lighthouse instance as a Docker container:
 
 ```
-dotnet publish -c Release -r win7-x64 -f netcoreapp1.1
+PS> docker run --name lighthouse1 --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env ACTORSYSTEM=webcrawler --env CLUSTER_IP=lighthouse1 --env CLUSTER_PORT=4053 --env CLUSTER_SEEDS="akka.tcp://webcrawler@lighthouse1:4053" petabridge/lighthouse:latest
 ```
 
-This will include a `publish` folder in your bin directory that will include the .exe and the .NET Core runtime dependencies:
+### Running in .NET Framework
+You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this repository and build the project. Lighthouse will run as a [Topshelf Windows Service](http://topshelf-project.com/) and can be installed as such.
 
-```
-bin/
-	Release/
-		netcoreapp1.1/
-			win7-x64/
-				publish/
-					Lighthouse.exe
-```
+### Examples of Lighthouse in the Wild
+Looking for some complete examples of how to use Lighthouse? Here's some:
+
+1. [Cluster.WebCrawler - webcrawling Akka.Cluster + Akka.Streams sample application.](https://github.com/petabridge/Cluster.WebCrawler)
