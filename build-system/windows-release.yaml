@@ -112,11 +112,6 @@ jobs:
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-nanoserver
       - task: Docker@2
-        displayName: Docker Push (Windows)
-        inputs:
-          command: push
-          repository: petabridge/lighthouse
-      - task: Docker@2
         displayName: Logout of Docker Hub
         inputs:
           command: logout
