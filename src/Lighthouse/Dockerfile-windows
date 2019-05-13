@@ -17,7 +17,7 @@ EXPOSE 9110 4053
 RUN dotnet tool install --global pbm 
 
 # Needed because https://stackoverflow.com/questions/51977474/install-dotnet-core-tool-dockerfile
-ENV PATH="${PATH}:/root/.dotnet/tools"
+#ENV PATH="${PATH}:/root/.dotnet/tools"
 
 # RUN pbm help
 
