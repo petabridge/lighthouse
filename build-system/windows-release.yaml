@@ -67,7 +67,7 @@ jobs:
         displayName: 'Copy into working directory'
         inputs:
           sourceFolder: $(Build.StagingDirectory)/drop
-          targetFolder: $(Build.StagingDirectory)
+          targetFolder: $(Agent.BuildDirectory)
       - task: CmdLine@2
         displayName: "Rename Dockerfile"
         inputs:
@@ -114,7 +114,7 @@ jobs:
         displayName: 'Copy into working directory'
         inputs:
           sourceFolder: $(Build.StagingDirectory)/drop
-          targetFolder: $(Build.StagingDirectory)
+          targetFolder: $(Agent.BuildDirectory)
       - task: CmdLine@2
         displayName: "Rename Dockerfile"
         inputs:
