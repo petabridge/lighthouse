@@ -68,15 +68,25 @@ jobs:
           command: login
           containerRegistry: $(dockerConnectionName)
       - task: Docker@2
-        displayName: Build and Push
+        displayName: Docker Build (Linux)
         inputs:
-          command: buildAndPush
+          command: build
           arguments: -f Dockerfile-linux
           repository: petabridge/lighthouse
           tags: |
             latest
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-linux
+      - task: Docker@2
+        displayName: Docker Push (Linux)
+        inputs:
+          command: push
+          repository: petabridge/lighthouse
+      - task: Docker@2
+        displayName: Logout of Docker Hub
+        inputs:
+          command: logout
+          containerRegistry: $(dockerConnectionName)
 
   - job:  windowsImageDeploy
     pool:
@@ -95,12 +105,22 @@ jobs:
           command: login
           containerRegistry: $(dockerConnectionName)
       - task: Docker@2
-        displayName: Build and Push
+        displayName: Docker Build (Windows)
         inputs:
-          command: buildAndPush
+          command: build
           arguments: -f Dockerfile-windows
           repository: petabridge/lighthouse
           tags: |
             latest
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-nanoserver
+      - task: Docker@2
+        displayName: Docker Push (Windows)
+        inputs:
+          command: push
+          repository: petabridge/lighthouse
+      - task: Docker@2
+        displayName: Logout of Docker Hub
+        inputs:
+          command: logout
+          containerRegistry: $(dockerConnectionName)
