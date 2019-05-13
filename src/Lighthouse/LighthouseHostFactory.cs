@@ -1,33 +1,34 @@
-﻿using System;
+﻿// -----------------------------------------------------------------------
+// <copyright file="LighthouseHostFactory.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2019 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Linq;
 using Akka.Actor;
 using Akka.Bootstrap.Docker;
 using Akka.Configuration;
-using ConfigurationException = Akka.Configuration.ConfigurationException;
 
 namespace Lighthouse
 {
     /// <summary>
-    /// Launcher for the Lighthouse <see cref="ActorSystem"/>
+    ///     Launcher for the Lighthouse <see cref="ActorSystem" />
     /// </summary>
     public static class LighthouseHostFactory
     {
-        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null, string systemName = null)
+        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null,
+            string systemName = null)
         {
             systemName = systemName ?? Environment.GetEnvironmentVariable("ACTORSYSTEM")?.Trim();
 
             // Set environment variables for use inside Akka.Bootstrap.Docker
             // If overrides were provided to this method.
-            if (!string.IsNullOrEmpty(ipAddress))
-            {
-                Environment.SetEnvironmentVariable("CLUSTER_IP", ipAddress);
-            }
+            if (!string.IsNullOrEmpty(ipAddress)) Environment.SetEnvironmentVariable("CLUSTER_IP", ipAddress);
 
-            if(specifiedPort != null)
-            {
+            if (specifiedPort != null)
                 Environment.SetEnvironmentVariable("CLUSTER_PORT", specifiedPort.Value.ToString());
-            }
 
             var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon")).BootstrapFromDocker();
 
