@@ -4,6 +4,7 @@ parameters:
   scriptFileName: ''
   scriptArgs: 'all'
   timeoutInMinutes: 120
+  dockerBuildArgs: 'Docker remoteRegistry=petabridge'
 
 jobs:
   - job: ${{ parameters.name }}
@@ -42,9 +43,18 @@ jobs:
         displayName: 'If above is partially succeeded, then fail'
         condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
       #Docker build 
+      # Build on Linux
       - task: Bash@3 
-        displayName: Docker Build
+        displayName: Docker Build (Linux)
         inputs:
           filePath: ${{ parameters.scriptFileName }}
-          arguments: 'Docker remoteRegistry=petabridge'
+          arguments: ${{ parameters.dockerBuildArgs }}
         continueOnError: false
+        condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
+      - task: BatchScript@1
+        displayName: Docker Build (Windows)
+        inputs:
+          filename: ${{ parameters.scriptFileName }}
+          arguments: ${{ parameters.dockerBuildArgs }}
+        continueOnError: true
+        condition: eq( variables['Agent.OS'], 'Windows_NT' )
