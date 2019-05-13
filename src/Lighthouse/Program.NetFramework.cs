@@ -1,4 +1,10 @@
-﻿#if NET452
+﻿// -----------------------------------------------------------------------
+// <copyright file="Program.NetFramework.cs" company="Petabridge, LLC">
+//      Copyright (C) 2015 - 2019 Petabridge, LLC <https://petabridge.com>
+// </copyright>
+// -----------------------------------------------------------------------
+
+#if !CORECLR
 using Topshelf;
 #endif
 
@@ -6,7 +12,7 @@ namespace Lighthouse
 {
     public partial class Program
     {
-#if NET452
+#if !CORECLR
         public static void Main(string[] args)
         {
             HostFactory.Run(x =>
