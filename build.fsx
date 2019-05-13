@@ -250,7 +250,7 @@ Target "PublishCode" (fun _ ->
 
 let mapDockerImageName (projectName:string) =
     match projectName with
-    | "Lighthouse" -> Some("petabridge/lighthouse")
+    | "Lighthouse" -> Some("lighthouse")
     | _ -> None
 
 Target "BuildDockerImages" (fun _ ->

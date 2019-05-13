@@ -46,5 +46,5 @@ jobs:
         displayName: Docker Build
         inputs:
           filePath: ${{ parameters.scriptFileName }}
-          arguments: Docker
+          arguments: 'Docker remoteRegistry=petabridge'
         continueOnError: false
