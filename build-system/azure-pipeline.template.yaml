@@ -41,3 +41,10 @@ jobs:
         failOnStderr: true
         displayName: 'If above is partially succeeded, then fail'
         condition: eq(variables['Agent.JobStatus'], 'SucceededWithIssues')
+      #Docker build 
+      - task: Bash@3 
+        displayName: Docker Build
+        inputs:
+          filePath: ${{ parameters.scriptFileName }}
+          arguments: Docker
+        continueOnError: false
