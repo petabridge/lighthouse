@@ -66,7 +66,7 @@ jobs:
         displayName: "Login to Docker Hub"
         inputs:
           command: login
-          containerRegistry: $(PetabridgeDocker)
+          containerRegistry: $(dockerConnectionName)
       - task: Docker@2
         displayName: Build and Push
         inputs:
@@ -93,7 +93,7 @@ jobs:
         displayName: "Login to Docker Hub"
         inputs:
           command: login
-          containerRegistry: $(PetabridgeDocker)
+          containerRegistry: $(dockerConnectionName)
       - task: Docker@2
         displayName: Build and Push
         inputs:
