@@ -76,6 +76,7 @@ jobs:
           repository: petabridge/lighthouse
           tags: |
             latest
+            linux-latest
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-linux
       - task: Docker@2
@@ -108,6 +109,7 @@ jobs:
           Dockerfile: $(Agent.BuildDirectory)/drop/Dockerfile-windows
           repository: petabridge/lighthouse
           tags: |
+            windows-latest
             $(Build.SourceBranchName)-nanoserver
       - task: Docker@2
         displayName: Logout of Docker Hub
