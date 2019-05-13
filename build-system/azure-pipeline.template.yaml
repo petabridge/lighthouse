@@ -4,6 +4,7 @@ parameters:
   scriptFileName: ''
   scriptArgs: 'all'
   timeoutInMinutes: 120
+  dockerBuildArgs: 'Docker remoteRegistry=petabridge'
 
 jobs:
   - job: ${{ parameters.name }}
@@ -37,6 +38,22 @@ jobs:
           testResultsFiles: '**/*.trx' #TestResults folder usually
           testRunTitle: ${{ parameters.name }}
           mergeTestResults: true
+      #Docker build 
+      # Build on Linux
+      - task: Bash@3 
+        displayName: Docker Build (Linux)
+        inputs:
+          filePath: ${{ parameters.scriptFileName }}
+          arguments: ${{ parameters.dockerBuildArgs }}
+        continueOnError: false
+        condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
+      - task: BatchScript@1
+        displayName: Docker Build (Windows)
+        inputs:
+          filename: ${{ parameters.scriptFileName }}
+          arguments: ${{ parameters.dockerBuildArgs }}
+        continueOnError: true
+        condition: eq( variables['Agent.OS'], 'Windows_NT' )
       - script: 'echo 1>&2'
         failOnStderr: true
         displayName: 'If above is partially succeeded, then fail'

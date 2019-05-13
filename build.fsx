@@ -234,7 +234,7 @@ Target "PublishNuget" (fun _ ->
 // Docker images
 //--------------------------------------------------------------------------------  
 Target "PublishCode" (fun _ ->    
-    let projects = !! "src/**/*.Service.csproj" // publish services only
+    let projects = !! "src/**/Lighthouse.csproj" // publish services only
 
     let runSingleProject project =
         DotNetCli.Publish
@@ -243,6 +243,7 @@ Target "PublishCode" (fun _ ->
                     Project = project
                     Configuration = configuration
                     VersionSuffix = overrideVersionSuffix project
+                    Framework = "netcoreapp2.1"
                     })
 
     projects |> Seq.iter (runSingleProject)
@@ -250,7 +251,7 @@ Target "PublishCode" (fun _ ->
 
 let mapDockerImageName (projectName:string) =
     match projectName with
-    | "Lighthouse" -> Some("petabridge/lighthouse")
+    | "Lighthouse" -> Some("lighthouse")
     | _ -> None
 
 Target "BuildDockerImages" (fun _ ->
@@ -262,6 +263,12 @@ Target "BuildDockerImages" (fun _ ->
         match (isWindows) with 
         | true -> "Dockerfile-windows"
         | _ -> "Dockerfile-linux"
+
+    let dockerTags (imageName:string, assemblyVersion:string) =
+        match(isWindows) with
+        | true -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-nanoserver1803"; imageName + ":latest" |]
+        | _ -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-linux"; imageName + ":latest" |]
+
 
     let remoteRegistryUrl = getBuildParamOrDefault "remoteRegistry" ""
 
