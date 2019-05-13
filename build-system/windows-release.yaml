@@ -7,7 +7,7 @@ trigger:
 
 variables:
   - name: githubConnectionName
-    value: petabridge
+    value: releases
   - name: projectName
     value: lighthouse 
   - name: githubRepositoryName
