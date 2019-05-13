@@ -250,13 +250,18 @@ Target "PublishCode" (fun _ ->
 
 let mapDockerImageName (projectName:string) =
     match projectName with
-    | "Akka.CQRS.TradeProcessor.Service" -> Some("akka.cqrs.tradeprocessor")
+    | "Lighthouse" -> Some("petabridge/lighthouse")
     | _ -> None
 
 Target "BuildDockerImages" (fun _ ->
     let projects = !! "src/**/*.csproj" 
                    -- "src/**/*Tests.csproj" // Don't publish unit tests
                    -- "src/**/*Tests*.csproj"
+
+    let dockerFile = 
+        match (isWindows) with 
+        | true -> "Dockerfile-windows"
+        | _ -> "Dockerfile-linux"
 
     let remoteRegistryUrl = getBuildParamOrDefault "remoteRegistry" ""
 
@@ -266,6 +271,8 @@ Target "BuildDockerImages" (fun _ ->
             if(hasBuildParam "remoteRegistry") then
                 StringBuilder()
                     |> append "build"
+                    |> append "-f"
+                    |> append dockerFile
                     |> append "-t"
                     |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
                     |> append "-t"
@@ -279,6 +286,8 @@ Target "BuildDockerImages" (fun _ ->
             else
                 StringBuilder()
                     |> append "build"
+                    |> append "-f"
+                    |> append dockerFile
                     |> append "-t"
                     |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
                     |> append "-t"
