@@ -62,17 +62,7 @@ jobs:
           downloadType: 'single'
           artifactName: 'drop'
           itemPattern: drop/**
-          downloadPath: '$(Build.StagingDirectory)'
-      - task: CopyFiles@2
-        displayName: 'Copy into working directory'
-        inputs:
-          sourceFolder: $(Build.StagingDirectory)/drop
-          targetFolder: $(Agent.BuildDirectory)
-      - task: CmdLine@2
-        displayName: "DEBUG: list contents"
-        inputs:
-          workingDirectory: $(Agent.BuildDirectory)
-          script: ls
+          downloadPath: '$(Agent.BuildDirectory)'
       - task: Docker@2
         displayName: "Login to Docker Hub"
         inputs:
@@ -81,18 +71,13 @@ jobs:
       - task: Docker@2
         displayName: Docker Build (Linux)
         inputs:
-          command: build
-          Dockerfile: $(Agent.BuildDirectory)/Dockerfile-linux
+          command: buildAndPush
+          Dockerfile: $(Agent.BuildDirectory)/drop/Dockerfile-linux
           repository: petabridge/lighthouse
           tags: |
             latest
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-linux
-      - task: Docker@2
-        displayName: Docker Push (Linux)
-        inputs:
-          command: push
-          repository: petabridge/lighthouse
       - task: Docker@2
         displayName: Logout of Docker Hub
         inputs:
@@ -110,7 +95,7 @@ jobs:
           downloadType: 'single'
           artifactName: 'drop'
           itemPattern: drop/**
-          downloadPath: '$(Build.StagingDirectory)'
+          downloadPath: '$(Agent.BuildDirectory)'
       - task: CopyFiles@2
         displayName: 'Copy into working directory'
         inputs:
