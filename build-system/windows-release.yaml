@@ -73,10 +73,6 @@ jobs:
         inputs:
           workingDirectory: $(Agent.BuildDirectory)
           script: ls
-      - task: CmdLine@2
-        displayName: "Rename Dockerfile"
-        inputs:
-          script: mv Dockerfile-linux Dockerfile
       - task: Docker@2
         displayName: "Login to Docker Hub"
         inputs:
@@ -86,7 +82,7 @@ jobs:
         displayName: Docker Build (Linux)
         inputs:
           command: build
-          arguments: -f Dockerfile-linux
+          Dockerfile: $(Agent.BuildDirectory)/Dockerfile-linux
           repository: petabridge/lighthouse
           tags: |
             latest
@@ -125,11 +121,6 @@ jobs:
         inputs:
           workingDirectory: $(Agent.BuildDirectory)
           script: dir
-      - task: CmdLine@2
-        displayName: "Rename Dockerfile"
-        inputs:
-          workingDirectory: $(Agent.BuildDirectory)
-          script: ren Dockerfile-windows Dockerfile
       - task: Docker@2
         displayName: "Login to Docker Hub"
         inputs:
@@ -139,7 +130,7 @@ jobs:
         displayName: Docker Build (Windows)
         inputs:
           command: build
-          arguments: -f Dockerfile-windows
+          Dockerfile: $(Agent.BuildDirectory)/Dockerfile-windows
           repository: petabridge/lighthouse
           tags: |
             latest
