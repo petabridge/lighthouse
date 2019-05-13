@@ -6,8 +6,6 @@ trigger:
       - refs/tags/*
 
 variables:
-  - group: signingSecrets #create this group with SECRET variables `signingUsername` and `signingPassword`
-  - group: nugetKeys #create this group with SECRET variables `nugetKey`
   - name: githubConnectionName
     value: petabridge
   - name: projectName
