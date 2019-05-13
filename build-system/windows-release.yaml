@@ -20,6 +20,7 @@ variables:
   - name: githubRepositoryName
     value: yourOrganization/yourRepo #replace this
 
+- job: publishNetCore
 steps:
 - task: BatchScript@1
   displayName: 'FAKE Build'
@@ -36,3 +37,5 @@ steps:
     releaseNotesFile: 'RELEASE_NOTES.md'
     assets: |
      bin\nuget\*.nupkg
+- deployment:  linuxImageDeploy
+- deployment:  windowsImageDeploy
