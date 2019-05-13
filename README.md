@@ -2,59 +2,13 @@
 
 **Lighthouse** is a simple service-discovery tool for Akka.Cluster, designed to make it easier to play nice with PaaS deployments like Azure / Elastic Beanstalk / AppHarbor.
 
-## Running on .NET 4.5.2
+The way it works: Lighthouse runs on a static address and _is not updated during deployments of your other Akka.Cluster services_. You don't treat it like the rest of your services. It just stays there as a fixed entry point into the cluster while the rest of your application gets deployed, redeployed, scaled up, scaled down, and so on around it. This eliminates the complexity of traditional service discovery apparatuses by relying on Akka.Cluster's own built-in protocols to do the heavy lifting.
 
-Lighthouse runs on [Akka.NET](https://github.com/akkadotnet/akka.net) version 1.3.1, which supports .NET 4.5.2 and .NET Core 1.1/.NET Standard 1.6.  To package the executable and run the .NET 4.5.2 version locally, clone this repo and build the `Lighthouse` project.  Running Lighthouse.exe in a console should produce an output similar to this:
+If you do need to make an update to Lighthouse, here are some cases where that might make sense:
 
-```
-Topshelf.HostFactory: Configuration Result:
-[Success] Name Lighthouse
-[Success] DisplayName Lighthouse Service Discovery
-[Success] Description Lighthouse Service Discovery for Akka.NET Clusters
-[Success] ServiceName Lighthouse
-Topshelf.HostConfigurators.HostConfiguratorImpl: Topshelf v3.2.150.0, .NET Framework v4.0.30319.42000
-```
+1. To upgrade Akka.NET itself;
+2. To install additional [Petabridge.Cmd](https://cmd.petabridge.com/) modules;
+3. To change the Akka.Remote serialization format (since that affects how Lighthouse communicates with the rest of your Akka.NET cluster); or
+4. To install additional monitoring or tracing tools, such as [Phobos](https://phobos.petabridge.com/).
 
-The Lighthouse .NET 4.5.2 project is built as a [Topshelf](https://github.com/Topshelf/Topshelf) service.  This allows you to install Lighthouse as a Windows Service using a command like this:
-
-```
-Lighthouse.exe install --localsystem --autostart
-```
-
-See the Topshelf documentation for more info on command line arguments for installing a Topshelf service.
-
-# Running on .NET Core
-
-Lighthouse also targets the .NET Core 1.1 framework. When building for this target framwork it does not get built as a Topshelf windows service.  You have 2 ways that you can run this version:
-
-- using the .NET CLI
-- building the project as a standalone .exe for your specific [runtime identifier](https://docs.microsoft.com/en-us/dotnet/core/rid-catalog)
-
-#### Using the .NET CLI
-
-Build the project either in Visual Studio 2017 or using `dotnet build -c Release --framework netcoreapp1.1 Lighthouse.csproj`.  This will output `Lighthouse.dll` in your `bin/Release/netcoreapp1.1` folder.  From there, running `dotnet run ./Lighthouse.csproj --framework netcoreapp1.1` will start Lighthouse.  Pressing `Enter` will exit.
-
-#### Building the project as an .exe
-
-You need to restore the dependencies for the target runtime identifier that you want to build the executable for:
-
-```
-dotnet restore -r win7-x64
-```
-
-Then, you may publish the executable using the command:
-
-```
-dotnet publish -c Release -r win7-x64 -f netcoreapp1.1
-```
-
-This will include a `publish` folder in your bin directory that will include the .exe and the .NET Core runtime dependencies:
-
-```
-bin/
-	Release/
-		netcoreapp1.1/
-			win7-x64/
-				publish/
-					Lighthouse.exe
-```
+## Running Lighthouse
