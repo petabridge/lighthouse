@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2019 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>0.1.0</VersionPrefix>
+    <VersionPrefix>1.0.0</VersionPrefix>
     <PackageReleaseNotes>Upgraded to Akka.NET v1.3.13
 Installed [Akka.Bootstrap.Docker](https://github.com/petabridge/akkadotnet-bootstrap)
 Added separately tagged [Windows and Linux Lighthouse Docker images to `petabridge/lighthouse` on DockerHub](https://hub.docker.com/r/petabridge/lighthouse).
