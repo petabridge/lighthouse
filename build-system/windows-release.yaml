@@ -1,10 +1,5 @@
 # Release task for PbLib projects
 # See https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema for reference
-
-pool:
-  vmImage: windows-2019
-  demands: Cmd
-
 trigger:
   branches:
     include:
@@ -14,28 +9,100 @@ variables:
   - group: signingSecrets #create this group with SECRET variables `signingUsername` and `signingPassword`
   - group: nugetKeys #create this group with SECRET variables `nugetKey`
   - name: githubConnectionName
-    value: yourConnection #replace this
+    value: petabridge
   - name: projectName
-    value: yourProjectName #replace this
+    value: lighthouse 
   - name: githubRepositoryName
-    value: yourOrganization/yourRepo #replace this
+    value: petabridge/lighthouse 
+  - name: dockerConnectionName
+    value: PetabridgeDocker
 
+jobs:
 - job: publishNetCore
-steps:
-- task: BatchScript@1
-  displayName: 'FAKE Build'
-  inputs:
-    filename: build.cmd
-    arguments: 'All SignClientUser=$(signingUsername) SignClientSecret=$(signingPassword) nugetpublishurl=https://www.nuget.org/api/v2/package nugetkey=$(nugetKey)'
+    pool:
+      vmImage: windows-2019
+      demands: Cmd
+    steps:
+    - task: BatchScript@1
+      displayName: 'dotnet publish'
+      inputs:
+        filename: build.cmd
+        arguments: 'PublishCode'
+    - task: CopyFiles@2
+      displayName: 'Copy dotnet publish Output'
+      inputs:
+        sourceFolder: src/Lighthouse/bin/**/publish
+        targetFolder: $(Build.ArtifactStagingDirectory)/bin/netcoreapp2.1/publish
+    - task: CopyFiles@2
+      displayName: 'Copy Dockerfiles'
+      inputs:
+        sourceFolder: src/Lighthouse
+        contents: Dockerfile-*
+        targetFolder: $(Build.ArtifactStagingDirectory)
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
+        artifactName: drop
+    - task: GitHubRelease@0
+      displayName: 'GitHub release (create)'
+      inputs:
+        gitHubConnection: $(githubConnectionName)
+        repositoryName: $(githubRepositoryName)
+        title: '$(projectName) v$(Build.SourceBranchName)'
+        releaseNotesFile: 'RELEASE_NOTES.md'
+        assets: |
+         bin\nuget\*.nupkg
 
-- task: GitHubRelease@0
-  displayName: 'GitHub release (create)'
-  inputs:
-    gitHubConnection: $(githubConnectionName)
-    repositoryName: $(githubRepositoryName)
-    title: '$(projectName) v$(Build.SourceBranchName)'
-    releaseNotesFile: 'RELEASE_NOTES.md'
-    assets: |
-     bin\nuget\*.nupkg
 - deployment:  linuxImageDeploy
+    pool:
+      vmImage: ubuntu-16.04
+    dependsOn: publishNetCore
+    steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: 'drop'
+          downloadPath: '$(Build.StagingDirectory)'
+      - task: Docker@2
+        displayName: "Login to Docker Hub"
+        inputs:
+          command: login
+          containerRegistry: $(PetabridgeDocker)
+      - task: Docker@2
+        displayName: Build and Push
+        inputs:
+          command: buildAndPush
+          arguments: -f Dockerfile-linux
+          repository: petabridge/lighthouse
+          tags: |
+            latest
+            $(Build.SourceBranchName)
+            $(Build.SourceBranchName)-linux
+
 - deployment:  windowsImageDeploy
+    pool:
+      vmImage: windows-2019
+    dependsOn: publishNetCore
+    steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: 'drop'
+          downloadPath: '$(Build.StagingDirectory)'
+      - task: Docker@2
+        displayName: "Login to Docker Hub"
+        inputs:
+          command: login
+          containerRegistry: $(PetabridgeDocker)
+      - task: Docker@2
+        displayName: Build and Push
+        inputs:
+          command: buildAndPush
+          arguments: -f Dockerfile-windows
+          repository: petabridge/lighthouse
+          tags: |
+            latest
+            $(Build.SourceBranchName)
+            $(Build.SourceBranchName)-nanoserver
