@@ -18,7 +18,7 @@ variables:
     value: PetabridgeDocker
 
 jobs:
-- job: publishNetCore
+  - job: publishNetCore
     pool:
       vmImage: windows-2019
       demands: Cmd
@@ -53,7 +53,7 @@ jobs:
         assets: |
          bin\nuget\*.nupkg
 
-- deployment:  linuxImageDeploy
+  - job:  linuxImageDeploy
     pool:
       vmImage: ubuntu-16.04
     dependsOn: publishNetCore
@@ -80,7 +80,7 @@ jobs:
             $(Build.SourceBranchName)
             $(Build.SourceBranchName)-linux
 
-- deployment:  windowsImageDeploy
+  - job:  windowsImageDeploy
     pool:
       vmImage: windows-2019
     dependsOn: publishNetCore
