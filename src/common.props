@@ -2,9 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2019 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>1.1.0</VersionPrefix>
-    <PackageReleaseNotes>Reduced [Docker image size by a factor of 10](https://github.com/petabridge/lighthouse/pull/84).
-Upgraded to [Petabridge.Cmd v0.6.2](https://cmd.petabridge.com/articles/RELEASE_NOTES.html#the-highlights-of-changes-made-in-petabridgecmd-v060-2)</PackageReleaseNotes>
+    <VersionPrefix>1.2.0</VersionPrefix>
+    <PackageReleaseNotes>Fixed problem with v1.1.0 image of Lighthouse, which prevented `pbm` from being executed internally via `docker exec`. `pbm` can now be called normally again from within the container.</PackageReleaseNotes>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
     <PackageProjectUrl>
       https://github.com/petabridge/lighthouse
