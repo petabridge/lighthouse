@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == '$(NetFrameworkLibVersion)' ">
-    <PackageReference Include="Topshelf" Version="4.0.3" />
+    <PackageReference Include="Topshelf" Version="4.2.1" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == '$(NetCoreVersion)' ">
