@@ -1,0 +1,8 @@
+# .kodiak.toml
+version = 1
+
+[merge]
+require_automerge_label = false # merge everything
+method = "squash"
+delete_branch_on_merge = true
+block_on_reviews_requested = true
