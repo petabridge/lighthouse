@@ -254,6 +254,12 @@ let mapDockerImageName (projectName:string) =
     | "Lighthouse" -> Some("lighthouse")
     | _ -> None
 
+let composedGetDirName (p:string) =
+    System.IO.Path.GetDirectoryName p
+
+let composedGetFileNameWithoutExtension (p:string) =
+    System.IO.Path.GetFileNameWithoutExtension p
+
 Target "BuildDockerImages" (fun _ ->
     let projects = !! "src/**/*.csproj" 
                    -- "src/**/*Tests.csproj" // Don't publish unit tests
@@ -304,11 +310,11 @@ Target "BuildDockerImages" (fun _ ->
 
         ExecProcess(fun info -> 
                 info.FileName <- "docker"
-                info.WorkingDirectory <- Path.GetDirectoryName projectPath
+                info.WorkingDirectory <- composedGetDirName projectPath
                 info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
 
     let runSingleProject project =
-        let projectName = Path.GetFileNameWithoutExtension project
+        let projectName = composedGetFileNameWithoutExtension project
         let imageName = mapDockerImageName projectName
         let result = match imageName with
                         | None -> 0
