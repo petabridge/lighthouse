@@ -39,7 +39,9 @@ namespace Lighthouse
             ipAddress = clusterConfig.GetString("akka.remote.dot-netty.tcp.public-hostname");
             var port = clusterConfig.GetInt("akka.remote.dot-netty.tcp.port");
 
-            var selfAddress = $"akka.tcp://{systemName}@{ipAddress}:{port}";
+            var sslEnabled = clusterConfig.GetBoolean("akka.remote.dot-netty.tcp.enable-ssl");
+            var selfAddress = sslEnabled ? new Address("akka.ssl.tcp", systemName, ipAddress.Trim(), port).ToString()
+                    : new Address("akka.tcp", systemName, ipAddress.Trim(), port).ToString();
 
             /*
              * Sanity check
@@ -47,7 +49,6 @@ namespace Lighthouse
             Console.WriteLine($"[Lighthouse] ActorSystem: {systemName}; IP: {ipAddress}; PORT: {port}");
             Console.WriteLine("[Lighthouse] Performing pre-boot sanity check. Should be able to parse address [{0}]",
                 selfAddress);
-            selfAddress = new Address("akka.tcp", systemName, ipAddress.Trim(), port).ToString();
             Console.WriteLine("[Lighthouse] Parse successful.");
 
 
