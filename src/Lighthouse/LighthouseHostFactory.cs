@@ -10,6 +10,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Bootstrap.Docker;
 using Akka.Configuration;
+using static System.String;
 
 namespace Lighthouse
 {
@@ -23,17 +24,25 @@ namespace Lighthouse
         {
             systemName = systemName ?? Environment.GetEnvironmentVariable("ACTORSYSTEM")?.Trim();
 
+
             // Set environment variables for use inside Akka.Bootstrap.Docker
             // If overrides were provided to this method.
-            if (!string.IsNullOrEmpty(ipAddress)) Environment.SetEnvironmentVariable("CLUSTER_IP", ipAddress);
+            //if (!string.IsNullOrEmpty(ipAddress)) Environment.SetEnvironmentVariable("CLUSTER_IP", ipAddress);
 
-            if (specifiedPort != null)
-                Environment.SetEnvironmentVariable("CLUSTER_PORT", specifiedPort.Value.ToString());
+            //if (specifiedPort != null)
+            //    Environment.SetEnvironmentVariable("CLUSTER_PORT", specifiedPort.Value.ToString());
 
-            var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon")).BootstrapFromDocker();
+            var useDocker = !(IsNullOrEmpty(Environment.GetEnvironmentVariable("CLUSTER_IP")?.Trim()) ||
+                             IsNullOrEmpty(Environment.GetEnvironmentVariable("CLUSTER_SEEDS")?.Trim()));
+
+            var clusterConfig = ConfigurationFactory.ParseString(File.ReadAllText("akka.hocon"));
+
+            // If none of the environment variables expected by Akka.Bootstrap.Docker are set, use only what's in HOCON
+            if (useDocker)
+                clusterConfig = clusterConfig.BootstrapFromDocker();
 
             var lighthouseConfig = clusterConfig.GetConfig("lighthouse");
-            if (lighthouseConfig != null && string.IsNullOrEmpty(systemName))
+            if (lighthouseConfig != null && IsNullOrEmpty(systemName))
                 systemName = lighthouseConfig.GetString("actorsystem", systemName);
 
             ipAddress = clusterConfig.GetString("akka.remote.dot-netty.tcp.public-hostname");
