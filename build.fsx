@@ -133,6 +133,8 @@ Target "NBench" <| fun _ ->
     
 Target "RunTestsOnRuntimes" (fun _ ->
 
+    let LighthouseConnectTimeout = 20.0 // in seconds
+
     let dockerFileForTest = 
         match (isWindows) with
         | true -> "src/Lighthouse/Dockerfile-windows" 
@@ -160,12 +162,20 @@ Target "RunTestsOnRuntimes" (fun _ ->
                 info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
                 info.Arguments <- "rm -f lighthouse") (System.TimeSpan.FromMinutes 5.0) |> ignore // cleanup failure should not fail the test
                 
+    let startLighhouseLocally exePath =
+        printfn "Starting Lighthouse locally..."
+        try
+            let runResult = ExecProcess(fun info -> 
+                info.FileName <- exePath) (System.TimeSpan.FromSeconds LighthouseConnectTimeout) 
+            if runResult <> 0 then failwithf "Unable to start Lighthouse from %s" exePath
+        with 
+            | _ -> () // Local instance process should just timeout, this is fine
+                
     let connectLighthouse () =
         printfn "Connecting Lighthouse..."
         try
             ExecProcess(fun info -> 
-                info.FileName <- "pbm"
-                info.Arguments <- "") (System.TimeSpan.FromSeconds 20.0) |> ignore
+                info.FileName <- "pbm") (System.TimeSpan.FromSeconds LighthouseConnectTimeout) |> ignore
             // If process returned, this means that pbm failed to connect
             raise (ConnectionFailure "Failed to connect Lighthouse from pbm")
         with
@@ -179,6 +189,16 @@ Target "RunTestsOnRuntimes" (fun _ ->
         connectLighthouse()
     finally
         stopLighthouseDocker dockerFileForTest
+        
+    // Test Full .NET Framework version under windows only
+    // TODO: To make this work, need to start lighthouse and pbm as two parallel processes
+    (*
+    match (isWindows) with
+            | true -> 
+                startLighhouseLocally "src/Lighthouse/bin/Release/net461/Lighthouse.exe"
+                connectLighthouse()
+            | _ -> ()
+    *)
 )
 
 
