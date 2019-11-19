@@ -45,7 +45,7 @@ namespace Lighthouse
             if (lighthouseConfig != null && IsNullOrEmpty(systemName))
                 systemName = lighthouseConfig.GetString("actorsystem", systemName);
 
-            ipAddress = clusterConfig.GetString("akka.remote.dot-netty.tcp.public-hostname");
+            ipAddress = clusterConfig.GetString("akka.remote.dot-netty.tcp.public-hostname", "127.0.0.1");
             var port = clusterConfig.GetInt("akka.remote.dot-netty.tcp.port");
 
             var sslEnabled = clusterConfig.GetBoolean("akka.remote.dot-netty.tcp.enable-ssl");
