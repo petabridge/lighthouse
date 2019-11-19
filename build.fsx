@@ -39,6 +39,8 @@ let outputTests = __SOURCE_DIRECTORY__ @@ "TestResults"
 let outputPerfTests = __SOURCE_DIRECTORY__ @@ "PerfResults"
 let outputNuGet = output @@ "nuget"
 
+exception ConnectionFailure of string
+
 Target "Clean" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
 
@@ -128,6 +130,56 @@ Target "NBench" <| fun _ ->
         ResultHandling.failBuildIfXUnitReportedError TestRunnerErrorLevel.Error result
     
     projects |> Seq.iter runSingleProject
+    
+Target "RunTestsOnRuntimes" (fun _ ->
+
+    let dockerFileForTest = 
+        match (isWindows) with
+        | true -> "src/Lighthouse/Dockerfile-windows" 
+        | _ -> "src/Lighthouse/Dockerfile-linux" 
+    
+    let installPbm () =
+        // Install pbm client to test connections
+        ExecProcess(fun info ->
+            info.FileName <- "dotnet"
+            info.Arguments <- "tool install --global pbm") (TimeSpan.FromMinutes 5.0) |> ignore // this is fine if tool is already installed
+
+    let startLighthouseDocker dockerFile =
+        printfn "Starting Lighthouse..."
+        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:latest"
+        let runResult = ExecProcess(fun info -> 
+            info.FileName <- "docker"
+            info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+            info.Arguments <- runArgs) (System.TimeSpan.FromMinutes 5.0) 
+        if runResult <> 0 then failwith "Unable to start Lighthouse in Docker"
+    
+    let stopLighthouseDocker dockerFile = 
+        printfn "Stopping Lighthouse..."
+        ExecProcess(fun info -> 
+                info.FileName <- "docker"
+                info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+                info.Arguments <- "rm -f lighthouse") (System.TimeSpan.FromMinutes 5.0) |> ignore // cleanup failure should not fail the test
+                
+    let connectLighthouse () =
+        printfn "Connecting Lighthouse..."
+        try
+            ExecProcess(fun info -> 
+                info.FileName <- "pbm"
+                info.Arguments <- "") (System.TimeSpan.FromSeconds 20.0) |> ignore
+            // If process returned, this means that pbm failed to connect
+            raise (ConnectionFailure "Failed to connect Lighthouse from pbm")
+        with
+            | ConnectionFailure(str) -> reraise()
+            // If timed out, Lighthouse was connected successfully
+            | _ -> printfn "Lighthouse was connected successfully"
+    
+    installPbm()
+    startLighthouseDocker dockerFileForTest
+    try       
+        connectLighthouse()
+    finally
+        stopLighthouseDocker dockerFileForTest
+)
 
 
 //--------------------------------------------------------------------------------
@@ -388,6 +440,7 @@ Target "Nuget" DoNothing
 
 // tests dependencies
 "Build" ==> "RunTests"
+"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
 
 // nuget dependencies
 "Clean" ==> "Build" ==> "CreateNuget"
@@ -402,6 +455,7 @@ Target "Nuget" DoNothing
 // all
 "BuildRelease" ==> "All"
 "RunTests" ==> "All"
+"RunTestsOnRuntimes" ==> "All"
 "NBench" ==> "All"
 "Nuget" ==> "All"
 
