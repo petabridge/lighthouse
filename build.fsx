@@ -460,7 +460,7 @@ Target "Nuget" DoNothing
 
 // tests dependencies
 "Build" ==> "RunTests"
-"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
+"PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
 
 // nuget dependencies
 "Clean" ==> "Build" ==> "CreateNuget"
