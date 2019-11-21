@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1-nanoserver-1903 AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:2.1-nanoserver-1909 AS base
 WORKDIR /app
 
 # should be a comma-delimited list
