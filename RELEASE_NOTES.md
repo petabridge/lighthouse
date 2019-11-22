@@ -1,2 +1,4 @@
-#### 1.2.0 July 29 2019 ####
-* Fixed problem with v1.1.0 image of Lighthouse, which prevented `pbm` from being executed internally via `docker exec`. `pbm` can now be called normally again from within the container.
+#### 1.3.0 November 22 2019 ####
+* [Enable SSL needs management](https://github.com/petabridge/lighthouse/issues/102)
+* Updated all underlying dependencies.
+* Updated Windows Server base Docker image.
