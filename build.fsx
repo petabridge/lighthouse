@@ -39,6 +39,8 @@ let outputTests = __SOURCE_DIRECTORY__ @@ "TestResults"
 let outputPerfTests = __SOURCE_DIRECTORY__ @@ "PerfResults"
 let outputNuGet = output @@ "nuget"
 
+exception ConnectionFailure of string
+
 Target "Clean" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
 
@@ -128,6 +130,76 @@ Target "NBench" <| fun _ ->
         ResultHandling.failBuildIfXUnitReportedError TestRunnerErrorLevel.Error result
     
     projects |> Seq.iter runSingleProject
+    
+Target "RunTestsOnRuntimes" (fun _ ->
+
+    let LighthouseConnectTimeout = 20.0 // in seconds
+
+    let dockerFileForTest = 
+        match (isWindows) with
+        | true -> "src/Lighthouse/Dockerfile-windows" 
+        | _ -> "src/Lighthouse/Dockerfile-linux" 
+    
+    let installPbm () =
+        // Install pbm client to test connections
+        ExecProcess(fun info ->
+            info.FileName <- "dotnet"
+            info.Arguments <- "tool install --global pbm") (TimeSpan.FromMinutes 5.0) |> ignore // this is fine if tool is already installed
+
+    let startLighthouseDocker dockerFile =
+        printfn "Starting Lighthouse..."
+        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:latest"
+        let runResult = ExecProcess(fun info -> 
+            info.FileName <- "docker"
+            info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+            info.Arguments <- runArgs) (System.TimeSpan.FromMinutes 5.0) 
+        if runResult <> 0 then failwith "Unable to start Lighthouse in Docker"
+    
+    let stopLighthouseDocker dockerFile = 
+        printfn "Stopping Lighthouse..."
+        ExecProcess(fun info -> 
+                info.FileName <- "docker"
+                info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+                info.Arguments <- "rm -f lighthouse") (System.TimeSpan.FromMinutes 5.0) |> ignore // cleanup failure should not fail the test
+                
+    let startLighhouseLocally exePath =
+        printfn "Starting Lighthouse locally..."
+        try
+            let runResult = ExecProcess(fun info -> 
+                info.FileName <- exePath) (System.TimeSpan.FromSeconds LighthouseConnectTimeout) 
+            if runResult <> 0 then failwithf "Unable to start Lighthouse from %s" exePath
+        with 
+            | _ -> () // Local instance process should just timeout, this is fine
+                
+    let connectLighthouse () =
+        printfn "Connecting Lighthouse..."
+        try
+            ExecProcess(fun info -> 
+                info.FileName <- "pbm") (System.TimeSpan.FromSeconds LighthouseConnectTimeout) |> ignore
+            // If process returned, this means that pbm failed to connect
+            raise (ConnectionFailure "Failed to connect Lighthouse from pbm")
+        with
+            | ConnectionFailure(str) -> reraise()
+            // If timed out, Lighthouse was connected successfully
+            | _ -> printfn "Lighthouse was connected successfully"
+    
+    installPbm()
+    startLighthouseDocker dockerFileForTest
+    try       
+        connectLighthouse()
+    finally
+        stopLighthouseDocker dockerFileForTest
+        
+    // Test Full .NET Framework version under windows only
+    // TODO: To make this work, need to start lighthouse and pbm as two parallel processes
+    (*
+    match (isWindows) with
+            | true -> 
+                startLighhouseLocally "src/Lighthouse/bin/Release/net461/Lighthouse.exe"
+                connectLighthouse()
+            | _ -> ()
+    *)
+)
 
 
 //--------------------------------------------------------------------------------
@@ -254,6 +326,12 @@ let mapDockerImageName (projectName:string) =
     | "Lighthouse" -> Some("lighthouse")
     | _ -> None
 
+let composedGetDirName (p:string) =
+    System.IO.Path.GetDirectoryName p
+
+let composedGetFileNameWithoutExtension (p:string) =
+    System.IO.Path.GetFileNameWithoutExtension p
+
 Target "BuildDockerImages" (fun _ ->
     let projects = !! "src/**/*.csproj" 
                    -- "src/**/*Tests.csproj" // Don't publish unit tests
@@ -304,11 +382,11 @@ Target "BuildDockerImages" (fun _ ->
 
         ExecProcess(fun info -> 
                 info.FileName <- "docker"
-                info.WorkingDirectory <- Path.GetDirectoryName projectPath
+                info.WorkingDirectory <- composedGetDirName projectPath
                 info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
 
     let runSingleProject project =
-        let projectName = Path.GetFileNameWithoutExtension project
+        let projectName = composedGetFileNameWithoutExtension project
         let imageName = mapDockerImageName projectName
         let result = match imageName with
                         | None -> 0
@@ -382,6 +460,7 @@ Target "Nuget" DoNothing
 
 // tests dependencies
 "Build" ==> "RunTests"
+"PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
 
 // nuget dependencies
 "Clean" ==> "Build" ==> "CreateNuget"
@@ -391,7 +470,7 @@ Target "Nuget" DoNothing
 "Clean" ==> "BuildRelease" ==> "Docfx"
 
 // Docker
-"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "Docker"
+"PublishCode" ==> "BuildDockerImages" ==> "Docker"
 
 // all
 "BuildRelease" ==> "All"
