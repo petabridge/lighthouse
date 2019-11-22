@@ -470,7 +470,7 @@ Target "Nuget" DoNothing
 "Clean" ==> "BuildRelease" ==> "Docfx"
 
 // Docker
-"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "Docker"
+"PublishCode" ==> "BuildDockerImages" ==> "Docker"
 
 // all
 "BuildRelease" ==> "All"
