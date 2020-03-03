@@ -17,7 +17,7 @@ Updated Windows Server base Docker image.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>16.4.0</MicrosoftSdkVersion>
+    <MicrosoftSdkVersion>16.5.0</MicrosoftSdkVersion>
     <FluentAssertionsVersion>5.10.0</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp2.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
