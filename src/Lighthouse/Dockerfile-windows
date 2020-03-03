@@ -1,15 +1,6 @@
 FROM mcr.microsoft.com/dotnet/core/sdk:2.1-nanoserver-1803 AS base
 WORKDIR /app
 
-# should be a comma-delimited list
-ENV CLUSTER_SEEDS "[]"
-ENV CLUSTER_IP ""
-ENV CLUSTER_PORT "4053"
-
-# 9110 - Petabridge.Cmd
-# 4053 - Akka.Cluster
-EXPOSE 9110 4053
-
 # Install Petabridge.Cmd client so it can be invoked remotely via
 # Docker or K8s 'exec` commands
 #RUN dotnet tool install --global pbm 
@@ -28,5 +19,15 @@ COPY --from=base /app /app
 
 # copy .NET Core global tool
 # COPY --from=base /root/.dotnet /root/.dotnet/
+
+# should be a comma-delimited list
+ENV CLUSTER_SEEDS "[]"
+ENV CLUSTER_IP ""
+ENV CLUSTER_PORT "4053"
+ENV AKKA__CLUSTER__SPLIT_BRAIN_RESOLVER__ACTIVE_STRATEGY "keep-majority"
+
+# 9110 - Petabridge.Cmd
+# 4053 - Akka.Cluster
+EXPOSE 9110 4053
 
 CMD ["dotnet", "Lighthouse.dll"]
