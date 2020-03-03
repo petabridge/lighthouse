@@ -24,6 +24,6 @@ Updated Windows Server base Docker image.</PackageReleaseNotes>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
     <AkkaVersion>1.3.17</AkkaVersion>
-    <PbmVersion>0.7.0</PbmVersion>
+    <PbmVersion>0.7.1</PbmVersion>
   </PropertyGroup>
 </Project>
