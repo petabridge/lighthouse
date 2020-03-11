@@ -2,10 +2,8 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2019 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>1.3.0</VersionPrefix>
-    <PackageReleaseNotes>[Enable SSL needs management](https://github.com/petabridge/lighthouse/issues/102)
-Updated all underlying dependencies.
-Updated Windows Server base Docker image.</PackageReleaseNotes>
+    <VersionPrefix>1.3.1</VersionPrefix>
+    <PackageReleaseNotes>Updated to use Akka.NET v1.4.1.</PackageReleaseNotes>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
     <PackageProjectUrl>
       https://github.com/petabridge/lighthouse
@@ -17,13 +15,13 @@ Updated Windows Server base Docker image.</PackageReleaseNotes>
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>16.4.0</MicrosoftSdkVersion>
-    <FluentAssertionsVersion>5.9.0</FluentAssertionsVersion>
+    <MicrosoftSdkVersion>16.5.0</MicrosoftSdkVersion>
+    <FluentAssertionsVersion>5.10.2</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp2.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.3.16</AkkaVersion>
-    <PbmVersion>0.7.0</PbmVersion>
+    <AkkaVersion>1.4.1</AkkaVersion>
+    <PbmVersion>0.7.1</PbmVersion>
   </PropertyGroup>
 </Project>
