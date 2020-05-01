@@ -23,6 +23,6 @@ jobs:
 - template: azure-pipeline.template.yaml
   parameters:
     name: WindowsRuntimesTests
-    vmImage: 'win1803'
+    vmImage: 'windows-2019'
     scriptFileName: build.cmd
     scriptArgs: RunTestsOnRuntimes

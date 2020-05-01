@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/core/sdk:2.1 AS base
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS base
 WORKDIR /app
 
 # Install Petabridge.Cmd client so it can be invoked remotely via
@@ -25,6 +25,7 @@ ENV CLUSTER_SEEDS "[]"
 ENV CLUSTER_IP ""
 ENV CLUSTER_PORT "4053"
 ENV AKKA__CLUSTER__SPLIT_BRAIN_RESOLVER__ACTIVE_STRATEGY "keep-majority"
+ENV AKKA__REMOTE__DOT-NETTY__TCP__BATCHING__ENABLED "false"
 
 # 9110 - Petabridge.Cmd
 # 4053 - Akka.Cluster
