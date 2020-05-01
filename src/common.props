@@ -2,8 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2019 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>1.3.1</VersionPrefix>
-    <PackageReleaseNotes>Updated to use Akka.NET v1.4.1.</PackageReleaseNotes>
+    <VersionPrefix>1.3.2</VersionPrefix>
+    <PackageReleaseNotes>Updated to use Akka.NET v1.4.5.
+Updated Docker .NET Core runtime base image from nanoserver-1803 to nanoserver-1809, 1803 are deprecated.</PackageReleaseNotes>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
     <PackageProjectUrl>
       https://github.com/petabridge/lighthouse
@@ -15,13 +16,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>16.5.0</MicrosoftSdkVersion>
+    <MicrosoftSdkVersion>16.6.1</MicrosoftSdkVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp2.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.1</AkkaVersion>
+    <AkkaVersion>1.4.5</AkkaVersion>
     <PbmVersion>0.8.0</PbmVersion>
   </PropertyGroup>
 </Project>
