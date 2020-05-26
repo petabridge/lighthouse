@@ -22,7 +22,7 @@ Updated Docker .NET Core runtime base image from nanoserver-1803 to nanoserver-1
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.5</AkkaVersion>
+    <AkkaVersion>1.4.6</AkkaVersion>
     <PbmVersion>0.8.0</PbmVersion>
   </PropertyGroup>
 </Project>
