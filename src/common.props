@@ -23,7 +23,7 @@ Followed [Akka.Remote performance best practices](https://getakka.net/articles/r
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.7</AkkaVersion>
+    <AkkaVersion>1.4.8</AkkaVersion>
     <PbmVersion>0.8.0</PbmVersion>
   </PropertyGroup>
 </Project>
