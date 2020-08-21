@@ -16,7 +16,7 @@ Should resolve high idle CPU utilization issues detected in earlier versions of 
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>16.6.1</MicrosoftSdkVersion>
+    <MicrosoftSdkVersion>16.7.1</MicrosoftSdkVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
