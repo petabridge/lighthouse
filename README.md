@@ -52,3 +52,26 @@ You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this 
 Looking for some complete examples of how to use Lighthouse? Here's some:
 
 1. [Cluster.WebCrawler - webcrawling Akka.Cluster + Akka.Streams sample application.](https://github.com/petabridge/Cluster.WebCrawler)
+
+## Customizing Lighthouse / Avoiding Serialization Errors
+
+When using Akka.NET with extension modules like DistributedPubSub or custom serializers (like [Hyperion](https://github.com/akkadotnet/Hyperion)), you will get serialization errors logged.
+
+That's because extension modules are using their own serializers quite often, and Lighthouse node has to know about this serializers - that is, required assemblies should be built into Lighthouse container.
+
+As you may see in [project file references](src/Lighthouse/Lighthouse.csproj), only `Akka.Cluster` and basic `Petabridge.Cmd.Remote` / `Petabridge.Cmd.Cluster` 
+[pbm](https://cmd.petabridge.com/) modules are referenced by default, which means that if you need DistributedPubSub serializers to be discovered, 
+you have to build your own Lighthouse image from source, with required references included.
+
+Basically, what you have to do is:
+1. Get a list of Akka.NET extension modules you are using (`Akka.Cluster.Tools` might be the most popular, or any custom Akka.NET serialization package)
+2. Clone this Lighthouse repo, take Lighthouse project and add this references so that Lighthouse had all the same dependencies your Akka.Cluster nodes are using
+3. Build your own Docker image using Dockerfile ([windows](src/Lighthouse/Dockerfile-windows) / [linux](src/Lighthouse/Dockerfile-linux)) from this repository, 
+   and use your customized image instead of the default one
+
+### Workaround for DistributedPubSub
+
+`DistributedPubSub` extension has [`role`](https://getakka.net/articles/clustering/distributed-publish-subscribe.html#distributedpubsub-extension) configuration setting, which allows to select nodes that 
+are hosting DistributedPubSub mediators. You can use any role (let's say, `pub-sub-host`) in all your cluster nodes and set `akka.cluster.pub-sub.role = "pub-sub-host"` everywhere to exclude nodes that do not have this role configured.
+
+If Lighthouse container is not configured to have this role, DistributedPubSub will not even touch it's node, which should also resolve the issue with serialization errors.
