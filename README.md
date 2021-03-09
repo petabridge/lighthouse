@@ -55,9 +55,8 @@ Looking for some complete examples of how to use Lighthouse? Here's some:
 
 ## Customizing Lighthouse / Avoiding Serialization Errors
 
-When using Akka.NET with extension modules like DistributedPubSub or custom serializers (like [Hyperion](https://github.com/akkadotnet/Hyperion)), you will get serialization errors logged.
-
-That's because extension modules are using their own serializers quite often, and Lighthouse node has to know about this serializers - that is, required assemblies should be built into Lighthouse container.
+When using Akka.NET with extension modules like DistributedPubSub or custom serializers (like [Hyperion](https://github.com/akkadotnet/Hyperion)), 
+serialization errors may appear in the logs because these modules are not installed and configured into Lighthouse by default. That is, required assemblies should be built into Lighthouse container.
 
 As you may see in [project file references](src/Lighthouse/Lighthouse.csproj), only `Akka.Cluster` and basic `Petabridge.Cmd.Remote` / `Petabridge.Cmd.Cluster` 
 [pbm](https://cmd.petabridge.com/) modules are referenced by default, which means that if you need DistributedPubSub serializers to be discovered, 
