@@ -22,7 +22,7 @@ Should resolve high idle CPU utilization issues detected in earlier versions of 
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.17</AkkaVersion>
+    <AkkaVersion>1.4.18</AkkaVersion>
     <PbmVersion>0.8.2</PbmVersion>
   </PropertyGroup>
 </Project>
