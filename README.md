@@ -45,6 +45,30 @@ Here's an example of running a single Lighthouse instance as a Docker container:
 PS> docker run --name lighthouse1 --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env ACTORSYSTEM=webcrawler --env CLUSTER_IP=lighthouse1 --env CLUSTER_PORT=4053 --env CLUSTER_SEEDS="akka.tcp://webcrawler@lighthouse1:4053" petabridge/lighthouse:latest
 ```
 
+#### Enabling Additional Akka.NET Settings
+Lighthouse uses [`Akka.Bootstrap.Docker` under the covers, which allows for any Akka.NET HOCON setting to be overridden via environment variables](https://github.com/petabridge/akkadotnet-bootstrap/tree/dev/src/Akka.Bootstrap.Docker#using-environment-variables-to-configure-akkanet).
+
+**Enabling a Split Brain Resolver in Lighthouse**
+Here's one example of how to enable a split brain resolver in Lighthouse using these `Akka.Bootstrap.Docker` environment variable substitution, using `docker-compose` syntax:
+
+```
+version: '3'
+
+services:
+  lighthouse.main:
+    image: petabridge/lighthouse:latest
+    hostname: lighthouse.main
+    ports:
+      - '9110:9110'
+    environment:
+      ACTORSYSTEM: "LighthouseTest"
+      CLUSTER_PORT: 4053
+      CLUSTER_IP: "lighthouse.main"
+      CLUSTER_SEEDS: "akka.tcp://LighthouseTest@lighthouse.main:4053,akka.tcp://LighthouseTest@lighthouse.second:4053,akka.tcp://LighthouseTest@lighthouse.third:4053"
+      AKKA__CLUSTER__DOWNING_PROVIDER_CLASS: "Akka.Cluster.SplitBrainResolver, Akka.Cluster"
+      AKKA__CLUSTER__SPLIT_BRAIN_RESOLVER__ACTIVE_STRATEGY: "keep-majority"
+```
+
 ### Running in .NET Framework
 You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this repository and build the project. Lighthouse will run as a [Topshelf Windows Service](http://topshelf-project.com/) and can be installed as such.
 
