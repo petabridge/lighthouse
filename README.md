@@ -45,6 +45,30 @@ Here's an example of running a single Lighthouse instance as a Docker container:
 PS> docker run --name lighthouse1 --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env ACTORSYSTEM=webcrawler --env CLUSTER_IP=lighthouse1 --env CLUSTER_PORT=4053 --env CLUSTER_SEEDS="akka.tcp://webcrawler@lighthouse1:4053" petabridge/lighthouse:latest
 ```
 
+#### Enabling Additional Akka.NET Settings
+Lighthouse uses [`Akka.Bootstrap.Docker` under the covers, which allows for any Akka.NET HOCON setting to be overridden via environment variables](https://github.com/petabridge/akkadotnet-bootstrap/tree/dev/src/Akka.Bootstrap.Docker#using-environment-variables-to-configure-akkanet).
+
+**Enabling a Split Brain Resolver in Lighthouse**
+Here's one example of how to enable a split brain resolver in Lighthouse using these `Akka.Bootstrap.Docker` environment variable substitution, using `docker-compose` syntax:
+
+```
+version: '3'
+
+services:
+  lighthouse.main:
+    image: petabridge/lighthouse:latest
+    hostname: lighthouse.main
+    ports:
+      - '9110:9110'
+    environment:
+      ACTORSYSTEM: "LighthouseTest"
+      CLUSTER_PORT: 4053
+      CLUSTER_IP: "lighthouse.main"
+      CLUSTER_SEEDS: "akka.tcp://LighthouseTest@lighthouse.main:4053,akka.tcp://LighthouseTest@lighthouse.second:4053,akka.tcp://LighthouseTest@lighthouse.third:4053"
+      AKKA__CLUSTER__DOWNING_PROVIDER_CLASS: "Akka.Cluster.SplitBrainResolver, Akka.Cluster"
+      AKKA__CLUSTER__SPLIT_BRAIN_RESOLVER__ACTIVE_STRATEGY: "keep-majority"
+```
+
 ### Running in .NET Framework
 You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this repository and build the project. Lighthouse will run as a [Topshelf Windows Service](http://topshelf-project.com/) and can be installed as such.
 
@@ -52,3 +76,25 @@ You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this 
 Looking for some complete examples of how to use Lighthouse? Here's some:
 
 1. [Cluster.WebCrawler - webcrawling Akka.Cluster + Akka.Streams sample application.](https://github.com/petabridge/Cluster.WebCrawler)
+
+## Customizing Lighthouse / Avoiding Serialization Errors
+
+When using Akka.NET with extension modules like DistributedPubSub or custom serializers (like [Hyperion](https://github.com/akkadotnet/Hyperion)), 
+serialization errors may appear in the logs because these modules are not installed and configured into Lighthouse by default. That is, required assemblies should be built into Lighthouse container.
+
+As you may see in [project file references](src/Lighthouse/Lighthouse.csproj), only `Akka.Cluster` and basic `Petabridge.Cmd.Remote` / `Petabridge.Cmd.Cluster` 
+[pbm](https://cmd.petabridge.com/) modules are referenced by default, which means that if you need DistributedPubSub serializers to be discovered, 
+you have to build your own Lighthouse image from source, with required references included.
+
+Basically, what you have to do is:
+1. Get a list of Akka.NET extension modules you are using (`Akka.Cluster.Tools` might be the most popular, or any custom Akka.NET serialization package)
+2. Clone this Lighthouse repo, take Lighthouse project and add this references so that Lighthouse had all the same dependencies your Akka.Cluster nodes are using
+3. Build your own Docker image using Dockerfile ([windows](src/Lighthouse/Dockerfile-windows) / [linux](src/Lighthouse/Dockerfile-linux)) from this repository, 
+   and use your customized image instead of the default one
+
+### Workaround for DistributedPubSub
+
+`DistributedPubSub` extension has [`role`](https://getakka.net/articles/clustering/distributed-publish-subscribe.html#distributedpubsub-extension) configuration setting, which allows to select nodes that 
+are hosting DistributedPubSub mediators. You can use any role (let's say, `pub-sub-host`) in all your cluster nodes and set `akka.cluster.pub-sub.role = "pub-sub-host"` everywhere to exclude nodes that do not have this role configured.
+
+If Lighthouse container is not configured to have this role, DistributedPubSub will not even touch it's node, which should also resolve the issue with serialization errors.
