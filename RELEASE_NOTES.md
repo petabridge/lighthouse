@@ -1,2 +1,3 @@
-#### 1.5.2 April 03 2021 ####
-* Upgraded to [Akka.Bootstrap.Docker v0.5.1](https://github.com/petabridge/akkadotnet-bootstrap/releases/tag/0.5.1), which resolves issues with Akka.Cluster seed node bootstrapping for Lighthouse.
+#### 1.5.3 May 10 2021 ####
+* Upgraded to [Akka.NET v1.4.19](https://github.com/akkadotnet/akka.net/releases/tag/1.4.19)
+* Upgraded to [Petabridge.Cmd v0.8.5](https://cmd.petabridge.com/articles/RELEASE_NOTES.html#085-may-03-2021)
