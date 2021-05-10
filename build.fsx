@@ -10,11 +10,11 @@ open Fake.DotNetCli
 open Fake.DocFxHelper
 
 // Information about the project for Nuget and Assembly info files
-let product = "Akka.CQRS"
+let product = "Lighthouse"
 let configuration = "Release"
 
 // Metadata used when signing packages and DLLs
-let signingName = "My Library"
+let signingName = "Lighthouse"
 let signingDescription = "My REALLY COOL Library"
 let signingUrl = "https://signing.is.cool/"
 
@@ -470,7 +470,7 @@ Target "Nuget" DoNothing
 "Clean" ==> "BuildRelease" ==> "Docfx"
 
 // Docker
-"PublishCode" ==> "BuildDockerImages" ==> "Docker"
+"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "Docker"
 
 // all
 "BuildRelease" ==> "All"
