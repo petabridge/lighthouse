@@ -22,7 +22,7 @@ Upgraded to [Petabridge.Cmd v0.8.5](https://cmd.petabridge.com/articles/RELEASE_
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.19</AkkaVersion>
+    <AkkaVersion>1.4.20</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
 </Project>
