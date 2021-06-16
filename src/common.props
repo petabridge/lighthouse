@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2015-2019 Petabridge, LLC</Copyright>
+    <Copyright>Copyright © 2015-2021 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
     <VersionPrefix>1.5.3</VersionPrefix>
     <PackageReleaseNotes>Upgraded to [Akka.NET v1.4.19](https://github.com/akkadotnet/akka.net/releases/tag/1.4.19)
@@ -16,13 +16,13 @@ Upgraded to [Petabridge.Cmd v0.8.5](https://cmd.petabridge.com/articles/RELEASE_
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>16.9.4</MicrosoftSdkVersion>
+    <MicrosoftSdkVersion>16.10.0</MicrosoftSdkVersion>
     <FluentAssertionsVersion>5.10.3</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.19</AkkaVersion>
+    <AkkaVersion>1.4.21</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
 </Project>
