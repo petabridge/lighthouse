@@ -10,7 +10,7 @@
     <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
     <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
     <PackageReference Include="Akka.Bootstrap.Docker">
-      <Version>0.5.2</Version>
+      <Version>0.5.3</Version>
     </PackageReference>
   </ItemGroup>
 
