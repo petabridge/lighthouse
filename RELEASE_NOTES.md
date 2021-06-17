@@ -1,3 +1,6 @@
+#### 1.5.5 June 16 2021 ####
+* Upgrade [Akka.Bootstrap.Docker to 0.5.3](https://github.com/petabridge/akkadotnet-bootstrap/releases/tag/0.5.3)
+
 #### 1.5.4 June 16 2021 ####
 * Upgraded to [Akka.NET v1.4.21](https://github.com/akkadotnet/akka.net/releases/tag/1.4.21)
 
