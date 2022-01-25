@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +13,10 @@ namespace Lighthouse.Tests.Benchmark
 {
     public static class Program
     {
-        private const int TestLength = 5; // in seconds
+        private const int TestLength = 30; // in seconds
         private const int TestDelay = 5; // in seconds
-        private const int TestRepeat = 60;
+        private const int TestRepeat = 20;
         private const int TestClusterSize = 10;
-
-        private const int WarmUpRepeat = 5;
         
         private const string ActorSystemName = "CpuTest";
         private const string LighthouseAddress = "127.0.0.1";
@@ -69,16 +66,10 @@ namespace Lighthouse.Tests.Benchmark
             await Task.Delay(TimeSpan.FromSeconds(TestDelay));
 
             // Warm up
-            foreach (var i in Enumerable.Range(1, WarmUpRepeat))
+            foreach (var _ in Enumerable.Range(0, 5))
             {
-                var start = CpuUsage.GetByProcess();
-                await Task.Delay(TimeSpan.FromSeconds(TestLength));
-                var end = CpuUsage.GetByProcess();
-                var final = end - start;
-                
-                Console.WriteLine($"{i}. [Warmup] {final}");
+                CpuUsage.GetByProcess();
             }
-            Console.WriteLine();
 
             // Start benchmark
             foreach (var i in Enumerable.Range(1, TestRepeat))
@@ -102,29 +93,18 @@ namespace Lighthouse.Tests.Benchmark
             // Stop lighthouse
             await service.StopAsync();
 
-            // Generate csv report
-            var now = DateTime.Now;
+            // Generate report
             var sb = new StringBuilder();
-            sb.AppendLine($"CPU Benchmark {now}");
-            sb.AppendLine($"Sample Time,{TestLength},second(s)");
-            sb.AppendLine($"Sample points,{TestRepeat}");
-            sb.AppendLine($"Cluster size,{TestClusterSize},node(s)");
-            sb.AppendLine("Sample time,User usage,User percent,Kernel usage,Kernel percent,Total usage,Total percent");
-            foreach (var iter in Enumerable.Range(1, TestRepeat))
-            {
-                var usage = Usages[iter - 1];
-                var user = usage.UserUsage.TotalSeconds;
-                var kernel = usage.KernelUsage.TotalSeconds;
-                var total = usage.TotalMicroSeconds / 1000000.0;
-                sb.AppendLine($"{iter * TestLength},{user},{(user/TestLength)*100},{kernel},{(kernel/TestLength)*100},{total},{(total/TestLength)*100}");
-            }
-            
-            await File.WriteAllTextAsync($"CpuBenchmark_{now.ToFileTime()}.csv", sb.ToString());
-            
-            // Generate console report
-            sb.Clear();
             sb.AppendLine("CPU Benchmark complete.");
             sb.AppendLine();
+
+            var num = 1;
+            foreach (var usage in Usages)
+            {
+                sb.AppendLine($"{num++}. CPU usage: user: {usage.UserUsage.TotalMicroSeconds / 1000.0} ms, " +
+                              $"kernel: {usage.KernelUsage.TotalMicroSeconds / 1000.0} ms, " +
+                              $"total: {usage.TotalMicroSeconds / 1000.0} ms");
+            }
 
             sb.AppendLine()
                 .AppendLine(" CPU | Mean | StdErr | StdDev | Median |")
