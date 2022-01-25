@@ -24,13 +24,11 @@ namespace Lighthouse
         {
             systemName = systemName ?? Environment.GetEnvironmentVariable("ACTORSYSTEM")?.Trim();
 
-
-            // Set environment variables for use inside Akka.Bootstrap.Docker
-            // If overrides were provided to this method.
-            //if (!string.IsNullOrEmpty(ipAddress)) Environment.SetEnvironmentVariable("CLUSTER_IP", ipAddress);
-
-            //if (specifiedPort != null)
-            //    Environment.SetEnvironmentVariable("CLUSTER_PORT", specifiedPort.Value.ToString());
+            var argConfig = "";
+            if (ipAddress != null)
+                argConfig += $"akka.remote.dot-netty.tcp.public-hostname = {ipAddress}\n";
+            if (specifiedPort != null)
+                argConfig += $"akka.remote.dot-netty.tcp.port = {specifiedPort}";
 
             var useDocker = !(IsNullOrEmpty(Environment.GetEnvironmentVariable("CLUSTER_IP")?.Trim()) ||
                              IsNullOrEmpty(Environment.GetEnvironmentVariable("CLUSTER_SEEDS")?.Trim()));
@@ -41,6 +39,11 @@ namespace Lighthouse
             if (useDocker)
                 clusterConfig = clusterConfig.BootstrapFromDocker();
 
+            // Values from method arguments should always win
+            if (!IsNullOrEmpty(argConfig))
+                clusterConfig = ConfigurationFactory.ParseString(argConfig)
+                    .WithFallback(clusterConfig);
+            
             var lighthouseConfig = clusterConfig.GetConfig("lighthouse");
             if (lighthouseConfig != null && IsNullOrEmpty(systemName))
                 systemName = lighthouseConfig.GetString("actorsystem", systemName);
