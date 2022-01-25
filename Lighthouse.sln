@@ -15,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{183986D1
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse", "src\Lighthouse\Lighthouse.csproj", "{5CA6B9E7-DAF2-47BD-9C91-7E979B4935A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lighthouse.Tests.Benchmark", "src\Lighthouse.Tests.Benchmark\Lighthouse.Tests.Benchmark.csproj", "{652331F0-292D-4EDF-B1A0-D8F6DC486DCE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -31,10 +29,6 @@ Global
 		{5CA6B9E7-DAF2-47BD-9C91-7E979B4935A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5CA6B9E7-DAF2-47BD-9C91-7E979B4935A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5CA6B9E7-DAF2-47BD-9C91-7E979B4935A1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{652331F0-292D-4EDF-B1A0-D8F6DC486DCE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{652331F0-292D-4EDF-B1A0-D8F6DC486DCE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{652331F0-292D-4EDF-B1A0-D8F6DC486DCE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{652331F0-292D-4EDF-B1A0-D8F6DC486DCE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
