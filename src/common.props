@@ -16,13 +16,13 @@ Upgraded to [Petabridge.Cmd v0.8.5](https://cmd.petabridge.com/articles/RELEASE_
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>17.0.0</MicrosoftSdkVersion>
+    <MicrosoftSdkVersion>17.1.0</MicrosoftSdkVersion>
     <FluentAssertionsVersion>6.5.1</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.32</AkkaVersion>
+    <AkkaVersion>1.4.35</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
 </Project>
