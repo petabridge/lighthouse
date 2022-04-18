@@ -15,10 +15,48 @@ petabridge.cmd{
 akka {
   actor {
     provider = cluster
+    
+    default-dispatcher = {
+        executor = channel-executor
+        fork-join-executor { #channelexecutor will re-use these settings
+          parallelism-min = 2
+          parallelism-factor = 1
+          parallelism-max = 64
+        }
+    }
+    
+    internal-dispatcher = {
+        executor = channel-executor
+        throughput = 5
+        fork-join-executor {
+          parallelism-min = 4
+          parallelism-factor = 1.0
+          parallelism-max = 64
+        }
+    }
   }
   
   remote {
     log-remote-lifecycle-events = DEBUG
+    
+    default-remote-dispatcher {
+        type = Dispatcher
+        executor = channel-executor
+        fork-join-executor {
+          parallelism-min = 2
+          parallelism-factor = 0.5
+          parallelism-max = 16
+        }
+    }
+    
+    backoff-remote-dispatcher {
+      executor = channel-executor
+      fork-join-executor {
+        parallelism-min = 2
+        parallelism-max = 2
+      }
+    }
+    
     dot-netty.tcp {
       transport-class = "Akka.Remote.Transport.DotNetty.TcpTransport, Akka.Remote"
       applied-adapters = []
