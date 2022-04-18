@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2015-2021 Petabridge, LLC</Copyright>
+    <Copyright>Copyright © 2015-2022 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
     <VersionPrefix>1.5.5</VersionPrefix>
     <PackageReleaseNotes>Upgrade [Akka.Bootstrap.Docker to 0.5.3](https://github.com/petabridge/akkadotnet-bootstrap/releases/tag/0.5.3)</PackageReleaseNotes>
@@ -20,7 +20,7 @@
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
-    <NetFrameworkTestVersion>net461</NetFrameworkTestVersion>
+    <NetFrameworkTestVersion>netcoreapp3.1</NetFrameworkTestVersion>
     <AkkaVersion>1.4.37</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
