@@ -69,9 +69,6 @@ services:
       AKKA__CLUSTER__SPLIT_BRAIN_RESOLVER__ACTIVE_STRATEGY: "keep-majority"
 ```
 
-### Running in .NET Framework
-You can still run Lighthouse under .NET Framework 4.6.1 if you wish. Clone this repository and build the project. Lighthouse will run as a [Topshelf Windows Service](http://topshelf-project.com/) and can be installed as such.
-
 ### Examples of Lighthouse in the Wild
 Looking for some complete examples of how to use Lighthouse? Here's some:
 
