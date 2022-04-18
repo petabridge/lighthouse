@@ -1,9 +1,5 @@
-#### 1.5.5 June 16 2021 ####
-* Upgrade [Akka.Bootstrap.Docker to 0.5.3](https://github.com/petabridge/akkadotnet-bootstrap/releases/tag/0.5.3)
+#### 1.6.0 June 16 2021 ####
 
-#### 1.5.4 June 16 2021 ####
-* Upgraded to [Akka.NET v1.4.21](https://github.com/akkadotnet/akka.net/releases/tag/1.4.21)
-
-#### 1.5.3 May 10 2021 ####
-* Upgraded to [Akka.NET v1.4.19](https://github.com/akkadotnet/akka.net/releases/tag/1.4.19)
-* Upgraded to [Petabridge.Cmd v0.8.5](https://cmd.petabridge.com/articles/RELEASE_NOTES.html#085-may-03-2021)
+* Dropped Topshelf support
+* Migrated to [Akka.Hosting](https://github.com/akkadotnet/Akka.Hosting) and `IHostedService`
+* Significantly reduced idle CPU consumption by migrating to [`channel-executor` for dispatching](https://getakka.net/articles/actors/dispatchers.html#channelexecutor).

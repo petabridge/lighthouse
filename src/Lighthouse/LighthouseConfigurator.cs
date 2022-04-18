@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-// <copyright file="LighthouseHostFactory.cs" company="Petabridge, LLC">
+// <copyright file="LighthouseConfigurator.cs" company="Petabridge, LLC">
 //      Copyright (C) 2015 - 2019 Petabridge, LLC <https://petabridge.com>
 // </copyright>
 // -----------------------------------------------------------------------
@@ -15,11 +15,11 @@ using static System.String;
 namespace Lighthouse
 {
     /// <summary>
-    ///     Launcher for the Lighthouse <see cref="ActorSystem" />
+    ///     Configurator for Lighthouse
     /// </summary>
-    public static class LighthouseHostFactory
+    public static class LighthouseConfigurator
     {
-        public static ActorSystem LaunchLighthouse(string ipAddress = null, int? specifiedPort = null,
+        public static (Config config, string actorSystemName) LaunchLighthouse(string ipAddress = null, int? specifiedPort = null,
             string systemName = null)
         {
             systemName = systemName ?? Environment.GetEnvironmentVariable("ACTORSYSTEM")?.Trim();
@@ -91,7 +91,7 @@ namespace Lighthouse
                     .WithFallback(clusterConfig)
                 : clusterConfig;
 
-            return ActorSystem.Create(systemName, finalConfig);
+            return (finalConfig, systemName);
         }
     }
 }

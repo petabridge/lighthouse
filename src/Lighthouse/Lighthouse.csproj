@@ -5,7 +5,7 @@
     <TargetFrameworks>$(NetCoreVersion);$(NetFrameworkLibVersion)</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster" Version="$(AkkaVersion)" />
+    <PackageReference Include="Akka.Cluster.Hosting" Version="0.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="5.0.0" />
     <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
     <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
@@ -13,14 +13,6 @@
       <Version>0.5.3</Version>
     </PackageReference>
   </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == '$(NetFrameworkLibVersion)' ">
-    <PackageReference Include="Topshelf" Version="4.2.1" />
-  </ItemGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == '$(NetCoreVersion)' ">
-    <DefineConstants>$(DefineConstants);CORECLR</DefineConstants>
-  </PropertyGroup>
 
   <ItemGroup>
     <None Update="akka.hocon">
