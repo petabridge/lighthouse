@@ -53,7 +53,7 @@ jobs:
 
   - job:  linuxImageDeploy
     pool:
-      vmImage: ubuntu-16.04
+      vmImage: ubuntu-latest
     dependsOn: publishNetCore
     steps:
       - task: DownloadBuildArtifacts@0
