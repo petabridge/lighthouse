@@ -1,4 +1,4 @@
-#### 1.6.0 April 18 2022 ####
+#### 1.6.1 April 18 2022 ####
 
 * Dropped Topshelf support
 * Migrated to [Akka.Hosting](https://github.com/akkadotnet/Akka.Hosting) and `IHostedService`
