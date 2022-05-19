@@ -16,7 +16,7 @@
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
     <MicrosoftSdkVersion>17.1.0</MicrosoftSdkVersion>
-    <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
+    <FluentAssertionsVersion>6.7.0</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
