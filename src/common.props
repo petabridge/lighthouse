@@ -21,7 +21,7 @@
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>netcoreapp3.1</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.38</AkkaVersion>
+    <AkkaVersion>1.4.39</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
 </Project>
