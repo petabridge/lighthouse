@@ -22,6 +22,6 @@
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>netcoreapp3.1</NetFrameworkTestVersion>
     <AkkaVersion>1.4.39</AkkaVersion>
-    <PbmVersion>0.8.5</PbmVersion>
+    <PbmVersion>1.1.0</PbmVersion>
   </PropertyGroup>
 </Project>
