@@ -5,7 +5,7 @@
     <TargetFrameworks>$(NetCoreVersion)</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster.Hosting" Version="0.2.2" />
+    <PackageReference Include="Akka.Cluster.Hosting" Version="0.3.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="6.0.0" />
     <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
     <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />

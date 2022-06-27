@@ -15,13 +15,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.1</XunitVersion>
-    <MicrosoftSdkVersion>17.1.0</MicrosoftSdkVersion>
-    <FluentAssertionsVersion>6.6.0</FluentAssertionsVersion>
+    <MicrosoftSdkVersion>17.2.0</MicrosoftSdkVersion>
+    <FluentAssertionsVersion>6.7.0</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>netcoreapp3.1</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.37</AkkaVersion>
+    <AkkaVersion>1.4.39</AkkaVersion>
     <PbmVersion>0.8.5</PbmVersion>
   </PropertyGroup>
 </Project>
