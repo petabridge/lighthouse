@@ -1,5 +1,4 @@
-#### 1.6.1 April 18 2022 ####
+#### 1.6.2 June 27 2022 ####
 
-* Dropped Topshelf support
-* Migrated to [Akka.Hosting](https://github.com/akkadotnet/Akka.Hosting) and `IHostedService`
-* Significantly reduced idle CPU consumption by migrating to [`channel-executor` for dispatching](https://getakka.net/articles/actors/dispatchers.html#channelexecutor).
+* [Bumped Akka.NET version to 1.4.39](https://github.com/akkadotnet/akka.net/releases/tag/1.4.39)
+* [Bumped Akka.Hosting from 0.2.2 to 0.3.4](https://github.com/petabridge/lighthouse/pull/266).
