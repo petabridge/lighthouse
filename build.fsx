@@ -137,34 +137,24 @@ Target "NBench" <| fun _ ->
     
     projects |> Seq.iter runSingleProject
     
+let dockerFilesWithTags =
+    match (isWindows) with
+        | true -> [("src/Lighthouse/Dockerfile-windows", ["windows-latest"])] 
+        | _ -> [("src/Lighthouse/Dockerfile-linux", ["latest";"linux-latest"]); ("src/Lighthouse/Dockerfile-arm64", ["arm-latest"])] 
+    
 Target "RunTestsOnRuntimes" (fun _ ->
 
     let LighthouseConnectTimeout = 20.0 // in seconds
-
-    let dockerFilesForTest = 
-        match (isWindows) with
-        | true -> ["src/Lighthouse/Dockerfile-windows"] 
-        | _ -> ["src/Lighthouse/Dockerfile-linux"; "src/Lighthouse/Dockerfile-arm64"] 
     
     let installPbm () =
         // Install pbm client to test connections
         ExecProcess(fun info ->
             info.FileName <- "dotnet"
             info.Arguments <- "tool install --global pbm") (TimeSpan.FromMinutes 5.0) |> ignore // this is fine if tool is already installed
-        
-    let buildDockerImage dockerFile =
-        printfn "Building Lighthouse with Dockerfile %s" dockerFile
-        let args = sprintf "build -f %s -t lighthousetest:latest ." (composedGetFileNameWithoutExtension dockerFile)
-        let runResult = ExecProcess(fun info -> 
-                info.FileName <- "docker"
-                info.WorkingDirectory <- (composedGetDirName dockerFile)
-                info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-        if runResult <> 0 then failwith "Unable to start Lighthouse in Docker"
 
-    let startLighthouseDocker dockerFile =
-        buildDockerImage dockerFile // have to build the Docker image first
+    let startLighthouseDocker dockerFile tag =
         printfn "Starting Lighthouse w/ Dockerfile %s" dockerFile
-        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthousetest:latest"
+        let runArgs = sprintf "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:%s" tag
         let runResult = ExecProcess(fun info -> 
             info.FileName <- "docker"
             info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
@@ -201,14 +191,14 @@ Target "RunTestsOnRuntimes" (fun _ ->
     
     installPbm()
     
-    let runSpec dockerFile =    
-        startLighthouseDocker dockerFile
+    let runSpec (dockerFile, tags) =    
+        startLighthouseDocker dockerFile (tags |> List.head)
         try       
             connectLighthouse()
         finally
             stopLighthouseDocker dockerFile
     
-    dockerFilesForTest |> Seq.iter runSpec
+    dockerFilesWithTags |> Seq.iter runSpec
 )
 
 
