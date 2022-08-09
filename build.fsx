@@ -37,6 +37,7 @@ let toolsDir = __SOURCE_DIRECTORY__ @@ "tools"
 let output = __SOURCE_DIRECTORY__  @@ "bin"
 let outputTests = __SOURCE_DIRECTORY__ @@ "TestResults"
 let outputPerfTests = __SOURCE_DIRECTORY__ @@ "PerfResults"
+let dockerScriptDir = __SOURCE_DIRECTORY__ @@ "src" @@ "Lighthouse"
 let outputNuGet = output @@ "nuget"
 
 exception ConnectionFailure of string
@@ -140,7 +141,7 @@ Target "NBench" <| fun _ ->
 let dockerFilesWithTags =
     match (isWindows) with
         | true -> [("src/Lighthouse/Dockerfile-windows", ["windows-latest"])] 
-        | _ -> [("src/Lighthouse/Dockerfile-linux", ["latest";"linux-latest"]); ("src/Lighthouse/Dockerfile-arm64", ["arm-latest"])] 
+        | _ -> [("src/Lighthouse/Dockerfile-linux", ["latest";"linux-latest"]); ("src/Lighthouse/Dockerfile-arm64", ["arm64-latest"])] 
     
 Target "RunTestsOnRuntimes" (fun _ ->
 
@@ -327,38 +328,18 @@ let mapDockerImageName (projectName:string) =
     | _ -> None
 
 Target "BuildDockerImages" (fun _ ->
-    let projects = !! "src/**/*.csproj" 
-                   -- "src/**/*Tests.csproj" // Don't publish unit tests
-                   -- "src/**/*Tests*.csproj"
-
-    let remoteRegistryUrl = getBuildParamOrDefault "remoteRegistry" ""
-
-    let buildDockerImage imageName projectPath =
-        let buildSingle (dockerFile, tags) =
-            logf "Attempting to build Lighthouse Dockerfile %s in PWD %s" (composedGetFileNameWithoutExtension dockerFile) (composedGetDirName projectPath)
-            let args = StringBuilder()
-                        |> append "build"
-                        |> append "-f"
-                        |> append (composedGetFileNameWithoutExtension dockerFile)
-                        |> appendWithoutQuotes (tags |> Seq.map (fun str -> sprintf "-t %s" str) |> String.concat " ")
-                        |> append "."
-                        |> toText
-
-            let result = ExecProcess(fun info -> 
-                    info.FileName <- "docker"
-                    info.WorkingDirectory <- composedGetDirName projectPath
-                    info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-            
-            if result <> 0 then failwithf "Unable to build Lighthouse Dockerfile %s in PWD %s" (composedGetFileNameWithoutExtension dockerFile) (composedGetDirName projectPath)
-            
-        dockerFilesWithTags |> Seq.iter buildSingle
-
-    let runSingleProject project =
-        let projectName = composedGetFileNameWithoutExtension project
-        let imageName = mapDockerImageName projectName
-        buildDockerImage imageName project
-
-    projects |> Seq.iter (runSingleProject)
+   if(isWindows) then
+        let result = ExecProcess(fun info -> 
+                info.FileName <- "ps"
+                info.WorkingDirectory <- dockerScriptDir
+                info.Arguments <- sprintf " ./buildWindowsDockerImages.ps1 %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+        if result <> 0 then failwithf "Unable to build Lighthouse Dockerfiles"
+   else
+       let result = ExecProcess(fun info -> 
+                info.FileName <- "sh"
+                info.WorkingDirectory <- dockerScriptDir
+                info.Arguments <- sprintf " ./buildLinuxDockerImages.sh %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+       if result <> 0 then failwithf "Unable to build Lighthouse Dockerfiles"
 )
 
 //--------------------------------------------------------------------------------
@@ -425,7 +406,7 @@ Target "Nuget" DoNothing
 
 // tests dependencies
 "Build" ==> "RunTests"
-"PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
+"BuildDockerImages" ==> "RunTestsOnRuntimes"
 
 // nuget dependencies
 "Clean" ==> "Build" ==> "CreateNuget"
@@ -435,7 +416,7 @@ Target "Nuget" DoNothing
 "Clean" ==> "BuildRelease" ==> "Docfx"
 
 // Docker
-"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "Docker"
+"BuildDockerImages" ==> "Docker"
 
 // all
 "BuildRelease" ==> "All"
