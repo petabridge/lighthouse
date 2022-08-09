@@ -335,11 +335,11 @@ Target "BuildDockerImages" (fun _ ->
 
     let buildDockerImage imageName projectPath =
         let buildSingle (dockerFile, tags) =
-            logf "Attempting to build Lighthouse Dockerfile %s in PWD %s" dockerFile (composedGetDirName projectPath)
+            logf "Attempting to build Lighthouse Dockerfile %s in PWD %s" (composedGetFileNameWithoutExtension dockerFile) (composedGetDirName projectPath)
             let args = StringBuilder()
                         |> append "build"
                         |> append "-f"
-                        |> append dockerFile
+                        |> append (composedGetFileNameWithoutExtension dockerFile)
                         |> appendWithoutQuotes (tags |> Seq.map (fun str -> sprintf "-t %s" str) |> String.concat " ")
                         |> append "."
                         |> toText
@@ -349,7 +349,7 @@ Target "BuildDockerImages" (fun _ ->
                     info.WorkingDirectory <- composedGetDirName projectPath
                     info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
             
-            if result <> 0 then failwithf "Unable to build Lighthouse Dockerfile %s in PWD %s" dockerFile (composedGetDirName projectPath)
+            if result <> 0 then failwithf "Unable to build Lighthouse Dockerfile %s in PWD %s" (composedGetFileNameWithoutExtension dockerFile) (composedGetDirName projectPath)
             
         dockerFilesWithTags |> Seq.iter buildSingle
 
