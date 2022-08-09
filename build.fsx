@@ -155,7 +155,7 @@ Target "RunTestsOnRuntimes" (fun _ ->
 
     let startLighthouseDocker dockerFile tag =
         printfn "Starting Lighthouse w/ Dockerfile %s" dockerFile
-        let runArgs = sprintf "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:%s" tag
+        let runArgs = sprintf "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env ACTORSYSTEM=some --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@127.0.0.1:4053 --env CLUSTER_PORT=4053 lighthouse:%s" tag
         let runResult = ExecProcess(fun info -> 
             info.FileName <- "docker"
             info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
