@@ -2,8 +2,9 @@
   <PropertyGroup>
     <Copyright>Copyright © 2015-2022 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>1.5.5</VersionPrefix>
-    <PackageReleaseNotes>Upgrade [Akka.Bootstrap.Docker to 0.5.3](https://github.com/petabridge/akkadotnet-bootstrap/releases/tag/0.5.3)</PackageReleaseNotes>
+    <VersionPrefix>1.6.2</VersionPrefix>
+    <PackageReleaseNotes>[Bumped Akka.NET version to 1.4.39](https://github.com/akkadotnet/akka.net/releases/tag/1.4.39)
+[Bumped Akka.Hosting from 0.2.2 to 0.3.4](https://github.com/petabridge/lighthouse/pull/266).</PackageReleaseNotes>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
     <PackageProjectUrl>
       https://github.com/petabridge/lighthouse
@@ -14,14 +15,14 @@
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
-    <XunitVersion>2.4.1</XunitVersion>
+    <XunitVersion>2.4.2</XunitVersion>
     <MicrosoftSdkVersion>17.2.0</MicrosoftSdkVersion>
     <FluentAssertionsVersion>6.7.0</FluentAssertionsVersion>
     <NetCoreVersion>netcoreapp3.1</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>netcoreapp3.1</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.39</AkkaVersion>
+    <AkkaVersion>1.4.40</AkkaVersion>
     <PbmVersion>1.1.0</PbmVersion>
   </PropertyGroup>
 </Project>

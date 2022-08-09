@@ -37,9 +37,16 @@ let toolsDir = __SOURCE_DIRECTORY__ @@ "tools"
 let output = __SOURCE_DIRECTORY__  @@ "bin"
 let outputTests = __SOURCE_DIRECTORY__ @@ "TestResults"
 let outputPerfTests = __SOURCE_DIRECTORY__ @@ "PerfResults"
+let dockerScriptDir = __SOURCE_DIRECTORY__ @@ "src" @@ "Lighthouse"
 let outputNuGet = output @@ "nuget"
 
 exception ConnectionFailure of string
+
+let composedGetDirName (p:string) =
+    System.IO.Path.GetDirectoryName p
+
+let composedGetFileNameWithoutExtension (p:string) =
+    System.IO.Path.GetFileNameWithoutExtension p
 
 Target "Clean" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
@@ -131,14 +138,14 @@ Target "NBench" <| fun _ ->
     
     projects |> Seq.iter runSingleProject
     
+let dockerFilesWithTags =
+    match (isWindows) with
+        | true -> [("src/Lighthouse/Dockerfile-windows", ["windows-latest"])] 
+        | _ -> [("src/Lighthouse/Dockerfile-linux", ["latest";"linux-latest"]); ("src/Lighthouse/Dockerfile-arm64", ["arm64-latest"])] 
+    
 Target "RunTestsOnRuntimes" (fun _ ->
 
     let LighthouseConnectTimeout = 20.0 // in seconds
-
-    let dockerFileForTest = 
-        match (isWindows) with
-        | true -> "src/Lighthouse/Dockerfile-windows" 
-        | _ -> "src/Lighthouse/Dockerfile-linux" 
     
     let installPbm () =
         // Install pbm client to test connections
@@ -146,9 +153,9 @@ Target "RunTestsOnRuntimes" (fun _ ->
             info.FileName <- "dotnet"
             info.Arguments <- "tool install --global pbm") (TimeSpan.FromMinutes 5.0) |> ignore // this is fine if tool is already installed
 
-    let startLighthouseDocker dockerFile =
-        printfn "Starting Lighthouse..."
-        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:latest"
+    let startLighthouseDocker dockerFile tag =
+        printfn "Starting Lighthouse w/ Dockerfile %s" dockerFile
+        let runArgs = sprintf "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env ACTORSYSTEM=some --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@127.0.0.1:4053 --env CLUSTER_PORT=4053 lighthouse:%s" tag
         let runResult = ExecProcess(fun info -> 
             info.FileName <- "docker"
             info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
@@ -162,7 +169,7 @@ Target "RunTestsOnRuntimes" (fun _ ->
                 info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
                 info.Arguments <- "rm -f lighthouse") (System.TimeSpan.FromMinutes 5.0) |> ignore // cleanup failure should not fail the test
                 
-    let startLighhouseLocally exePath =
+    let startLighthouseLocally exePath =
         printfn "Starting Lighthouse locally..."
         try
             let runResult = ExecProcess(fun info -> 
@@ -184,21 +191,15 @@ Target "RunTestsOnRuntimes" (fun _ ->
             | _ -> printfn "Lighthouse was connected successfully"
     
     installPbm()
-    startLighthouseDocker dockerFileForTest
-    try       
-        connectLighthouse()
-    finally
-        stopLighthouseDocker dockerFileForTest
-        
-    // Test Full .NET Framework version under windows only
-    // TODO: To make this work, need to start lighthouse and pbm as two parallel processes
-    (*
-    match (isWindows) with
-            | true -> 
-                startLighhouseLocally "src/Lighthouse/bin/Release/net461/Lighthouse.exe"
-                connectLighthouse()
-            | _ -> ()
-    *)
+    
+    let runSpec (dockerFile, tags) =    
+        startLighthouseDocker dockerFile (tags |> List.head)
+        try       
+            connectLighthouse()
+        finally
+            stopLighthouseDocker dockerFile
+    
+    dockerFilesWithTags |> Seq.iter runSpec
 )
 
 
@@ -243,7 +244,7 @@ Target "SignPackages" (fun _ ->
                 info.FileName <- signPath
                 info.WorkingDirectory <- __SOURCE_DIRECTORY__
                 info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-            if result <> 0 then failwithf "SignClient failed.%s" args
+            if result <> 0 then failwithf "SignClient failed. %s" args
 
         assemblies |> Seq.iter (signAssembly)
     else
@@ -326,74 +327,19 @@ let mapDockerImageName (projectName:string) =
     | "Lighthouse" -> Some("lighthouse")
     | _ -> None
 
-let composedGetDirName (p:string) =
-    System.IO.Path.GetDirectoryName p
-
-let composedGetFileNameWithoutExtension (p:string) =
-    System.IO.Path.GetFileNameWithoutExtension p
-
 Target "BuildDockerImages" (fun _ ->
-    let projects = !! "src/**/*.csproj" 
-                   -- "src/**/*Tests.csproj" // Don't publish unit tests
-                   -- "src/**/*Tests*.csproj"
-
-    let dockerFile = 
-        match (isWindows) with 
-        | true -> "Dockerfile-windows"
-        | _ -> "Dockerfile-linux"
-
-    let dockerTags (imageName:string, assemblyVersion:string) =
-        match(isWindows) with
-        | true -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-nanoserver1803"; imageName + ":latest" |]
-        | _ -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-linux"; imageName + ":latest" |]
-
-
-    let remoteRegistryUrl = getBuildParamOrDefault "remoteRegistry" ""
-
-    let buildDockerImage imageName projectPath =
-        
-        let args = 
-            if(hasBuildParam "remoteRegistry") then
-                StringBuilder()
-                    |> append "build"
-                    |> append "-f"
-                    |> append dockerFile
-                    |> append "-t"
-                    |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (imageName + ":latest") 
-                    |> append "-t"
-                    |> append (remoteRegistryUrl + "/" + imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (remoteRegistryUrl + "/" + imageName + ":latest") 
-                    |> append "."
-                    |> toText
-            else
-                StringBuilder()
-                    |> append "build"
-                    |> append "-f"
-                    |> append dockerFile
-                    |> append "-t"
-                    |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (imageName + ":latest") 
-                    |> append "."
-                    |> toText
-
-        ExecProcess(fun info -> 
-                info.FileName <- "docker"
-                info.WorkingDirectory <- composedGetDirName projectPath
-                info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-
-    let runSingleProject project =
-        let projectName = composedGetFileNameWithoutExtension project
-        let imageName = mapDockerImageName projectName
-        let result = match imageName with
-                        | None -> 0
-                        | Some(name) -> buildDockerImage name project
-        if result <> 0 then failwithf "docker build failed. %s" project
-
-    projects |> Seq.iter (runSingleProject)
+   if(isWindows) then
+        let result = ExecProcess(fun info -> 
+                info.FileName <- "powershell"
+                info.WorkingDirectory <- dockerScriptDir
+                info.Arguments <- sprintf " ./buildWindowsDockerImages.ps1 -tagVersion %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+        if result <> 0 then failwithf "Unable to build Lighthouse Dockerfiles"
+   else
+       let result = ExecProcess(fun info -> 
+                info.FileName <- "sh"
+                info.WorkingDirectory <- dockerScriptDir
+                info.Arguments <- sprintf " ./buildLinuxDockerImages.sh %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+       if result <> 0 then failwithf "Unable to build Lighthouse Dockerfiles"
 )
 
 //--------------------------------------------------------------------------------
@@ -460,7 +406,7 @@ Target "Nuget" DoNothing
 
 // tests dependencies
 "Build" ==> "RunTests"
-"PublishCode" ==> "BuildDockerImages" ==> "RunTestsOnRuntimes"
+"BuildDockerImages" ==> "RunTestsOnRuntimes"
 
 // nuget dependencies
 "Clean" ==> "Build" ==> "CreateNuget"
@@ -470,7 +416,7 @@ Target "Nuget" DoNothing
 "Clean" ==> "BuildRelease" ==> "Docfx"
 
 // Docker
-"BuildRelease" ==> "PublishCode" ==> "BuildDockerImages" ==> "Docker"
+"BuildDockerImages" ==> "Docker"
 
 // all
 "BuildRelease" ==> "All"
