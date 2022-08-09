@@ -1,7 +1,7 @@
 ﻿# Build local Windows nanoserver Docker images using the current project.
 # Script is designed to be run inside the root directory of the Akka.Bootstrap.Docker.Sample project.
 param (
-    [string]$imageName = "akka.docker.boostrap",
+    [string]$imageName = "lighthouse",
     [Parameter(Mandatory=$true)][string]$tagVersion
 )
 
