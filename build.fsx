@@ -335,6 +335,7 @@ Target "BuildDockerImages" (fun _ ->
 
     let buildDockerImage imageName projectPath =
         let buildSingle (dockerFile, tags) =
+            logf "Attempting to build Lighthouse Dockerfile %s in PWD %s" dockerFile (composedGetDirName projectPath)
             let args = StringBuilder()
                         |> append "build"
                         |> append "-f"
