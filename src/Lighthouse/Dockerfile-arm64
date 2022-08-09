@@ -3,7 +3,7 @@ WORKDIR /app
 
 # Install Petabridge.Cmd client so it can be invoked remotely via
 # Docker or K8s 'exec` commands
-RUN dotnet tool install --global -a arm64 pbm 
+RUN dotnet tool install --global pbm 
 
 # RUN pbm help
 
