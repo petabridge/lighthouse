@@ -145,10 +145,20 @@ Target "RunTestsOnRuntimes" (fun _ ->
         ExecProcess(fun info ->
             info.FileName <- "dotnet"
             info.Arguments <- "tool install --global pbm") (TimeSpan.FromMinutes 5.0) |> ignore // this is fine if tool is already installed
+        
+    let buildDockerImage dockerFile =
+        printfn "Building Lighthouse with Dockerfile %s" dockerFile
+        let args = sprintf "build -f %s -t lighthousetest:latest ." dockerFile
+        let runResult = ExecProcess(fun info -> 
+                info.FileName <- "docker"
+                info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+                info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+        if runResult <> 0 then failwith "Unable to start Lighthouse in Docker"
 
     let startLighthouseDocker dockerFile =
-        printfn "Starting Lighthouse..."
-        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthouse:latest"
+        buildDockerImage dockerFile // have to build the Docker image first
+        printfn "Starting Lighthouse w/ Dockerfile %s" dockerFile
+        let runArgs = "run -d --name lighthouse --hostname lighthouse1 -p 4053:4053 -p 9110:9110 --env CLUSTER_IP=127.0.0.1 --env CLUSTER_SEEDS=akka.tcp://some@lighthouse1:4053 --env CLUSTER_PORT=4053 lighthousetest:latest"
         let runResult = ExecProcess(fun info -> 
             info.FileName <- "docker"
             info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
@@ -162,7 +172,7 @@ Target "RunTestsOnRuntimes" (fun _ ->
                 info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
                 info.Arguments <- "rm -f lighthouse") (System.TimeSpan.FromMinutes 5.0) |> ignore // cleanup failure should not fail the test
                 
-    let startLighhouseLocally exePath =
+    let startLighthouseLocally exePath =
         printfn "Starting Lighthouse locally..."
         try
             let runResult = ExecProcess(fun info -> 
@@ -237,7 +247,7 @@ Target "SignPackages" (fun _ ->
                 info.FileName <- signPath
                 info.WorkingDirectory <- __SOURCE_DIRECTORY__
                 info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
-            if result <> 0 then failwithf "SignClient failed.%s" args
+            if result <> 0 then failwithf "SignClient failed. %s" args
 
         assemblies |> Seq.iter (signAssembly)
     else
