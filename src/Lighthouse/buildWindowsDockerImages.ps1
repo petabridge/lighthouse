@@ -13,4 +13,4 @@ $windowsImage = "{0}:windows-{1}" -f $imageName,$tagVersion
 $windowsImageLatest = "{0}:windows-latest" -f $imageName
 
 Write-Host ("Creating Docker (Windows) image [{0}]..." -f $windowsImage)
-docker build . -f Dockerfile-windows -t $windowsImage -t $windowsImageLatest
+docker build . --no-cache -f Dockerfile-windows -t $windowsImage -t $windowsImageLatest
