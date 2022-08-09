@@ -41,6 +41,12 @@ let outputNuGet = output @@ "nuget"
 
 exception ConnectionFailure of string
 
+let composedGetDirName (p:string) =
+    System.IO.Path.GetDirectoryName p
+
+let composedGetFileNameWithoutExtension (p:string) =
+    System.IO.Path.GetFileNameWithoutExtension p
+
 Target "Clean" (fun _ ->
     ActivateFinalTarget "KillCreatedProcesses"
 
@@ -148,10 +154,10 @@ Target "RunTestsOnRuntimes" (fun _ ->
         
     let buildDockerImage dockerFile =
         printfn "Building Lighthouse with Dockerfile %s" dockerFile
-        let args = sprintf "build -f %s -t lighthousetest:latest ." dockerFile
+        let args = sprintf "build -f %s -t lighthousetest:latest ." (composedGetFileNameWithoutExtension dockerFile)
         let runResult = ExecProcess(fun info -> 
                 info.FileName <- "docker"
-                info.WorkingDirectory <- (Directory.GetParent dockerFile).FullName
+                info.WorkingDirectory <- (composedGetDirName dockerFile)
                 info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
         if runResult <> 0 then failwith "Unable to start Lighthouse in Docker"
 
@@ -329,12 +335,6 @@ let mapDockerImageName (projectName:string) =
     match projectName with
     | "Lighthouse" -> Some("lighthouse")
     | _ -> None
-
-let composedGetDirName (p:string) =
-    System.IO.Path.GetDirectoryName p
-
-let composedGetFileNameWithoutExtension (p:string) =
-    System.IO.Path.GetFileNameWithoutExtension p
 
 Target "BuildDockerImages" (fun _ ->
     let projects = !! "src/**/*.csproj" 
