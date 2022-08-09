@@ -32,5 +32,5 @@ ARM64_IMAGE_LATEST="$IMAGE_NAME:arm64-latest"
 echo "Creating Docker (Linux) image [$LINUX_IMAGE]..."
 docker build . -f Dockerfile-linux -t $LINUX_IMAGE  -t $LINUX_IMAGE_LATEST -t "lighthouse:latest"
 
-echo "Creating Docker (ARM64/Linux) image [$LINUX_IMAGE]..."
+echo "Creating Docker (ARM64/Linux) image [$ARM64_IMAGE]..."
 docker buildx build --platform linux/arm64 . -f Dockerfile-arm64 -t $ARM64_IMAGE  -t $ARM64_IMAGE_LATEST
