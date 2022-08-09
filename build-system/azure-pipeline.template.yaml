@@ -16,7 +16,19 @@ jobs:
         clean: false  # whether to fetch clean each time
         submodules: recursive  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
         persistCredentials: true
+      - task: UseDotNet@2
+        displayName: 'Use .NET 6 SDK 6.0.100'
+        inputs:
+          version: 6.0.100
+      - task: UseDotNet@2
+        displayName: "Use .NET Core SDK 3.1.415"
+        inputs:
+          version: 3.1.415
       # Linux or macOS
+      - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        displayName: Docker - Register QEMU
+        continueOnError: true
+        condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
       - task: Bash@3 
         displayName: Linux / OSX Build
         inputs:
@@ -38,22 +50,6 @@ jobs:
           testResultsFiles: '**/*.trx' #TestResults folder usually
           testRunTitle: ${{ parameters.name }}
           mergeTestResults: true
-      #Docker build 
-      # Build on Linux
-      - task: Bash@3 
-        displayName: Docker Build (Linux)
-        inputs:
-          filePath: ${{ parameters.scriptFileName }}
-          arguments: ${{ parameters.dockerBuildArgs }}
-        continueOnError: false
-        condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
-      - task: BatchScript@1
-        displayName: Docker Build (Windows)
-        inputs:
-          filename: ${{ parameters.scriptFileName }}
-          arguments: ${{ parameters.dockerBuildArgs }}
-        continueOnError: true
-        condition: eq( variables['Agent.OS'], 'Windows_NT' )
       - script: 'echo 1>&2'
         failOnStderr: true
         displayName: 'If above is partially succeeded, then fail'

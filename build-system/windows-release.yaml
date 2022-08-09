@@ -87,7 +87,7 @@ jobs:
 
   - job:  windowsImageDeploy
     pool:
-      vmImage: windows-2019
+      vmImage: windows-latest
     dependsOn: publishNetCore
     steps:
       - task: DownloadBuildArtifacts@0
