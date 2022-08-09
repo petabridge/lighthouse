@@ -137,8 +137,8 @@ Target "RunTestsOnRuntimes" (fun _ ->
 
     let dockerFilesForTest = 
         match (isWindows) with
-        | true -> "src/Lighthouse/Dockerfile-windows" 
-        | _ -> "src/Lighthouse/Dockerfile-linux" 
+        | true -> ["src/Lighthouse/Dockerfile-windows"] 
+        | _ -> ["src/Lighthouse/Dockerfile-linux"; "src/Lighthouse/Dockerfile-arm64"] 
     
     let installPbm () =
         // Install pbm client to test connections
@@ -184,21 +184,15 @@ Target "RunTestsOnRuntimes" (fun _ ->
             | _ -> printfn "Lighthouse was connected successfully"
     
     installPbm()
-    startLighthouseDocker dockerFilesForTEST
-    try       
-        connectLighthouse()
-    finally
-        stopLighthouseDocker dockerFilesForTEST
-        
-    // Test Full .NET Framework version under windows only
-    // TODO: To make this work, need to start lighthouse and pbm as two parallel processes
-    (*
-    match (isWindows) with
-            | true -> 
-                startLighhouseLocally "src/Lighthouse/bin/Release/net461/Lighthouse.exe"
-                connectLighthouse()
-            | _ -> ()
-    *)
+    
+    let runSpec dockerFile =    
+        startLighthouseDocker dockerFile
+        try       
+            connectLighthouse()
+        finally
+            stopLighthouseDocker dockerFile
+    
+    dockerFilesForTest |> Seq.iter runSpec
 )
 
 
