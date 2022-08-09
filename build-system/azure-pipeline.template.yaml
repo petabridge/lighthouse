@@ -25,10 +25,10 @@ jobs:
         inputs:
           version: 3.1.415
       # Linux or macOS
-      - task: Bash@3
+      - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         displayName: Docker - Register QEMU
-        inputs:
-          inline: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+        continueOnError: true
+        condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
       - task: Bash@3 
         displayName: Linux / OSX Build
         inputs:
