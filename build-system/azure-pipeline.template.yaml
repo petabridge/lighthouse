@@ -9,6 +9,8 @@ parameters:
 jobs:
   - job: ${{ parameters.name }}
     timeoutInMinutes: ${{ parameters.timeoutInMinutes }}
+    variables:
+      DOCKER_BUILDKIT: 1
     pool:
       vmImage: ${{ parameters.vmImage }}
     steps:
