@@ -1,15 +1,15 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-focal AS base
+FROM mcr.microsoft.com/dotnet/sdk:3.1 AS base
 WORKDIR /app
 
 # Install Petabridge.Cmd client so it can be invoked remotely via
 # Docker or K8s 'exec` commands
-RUN dotnet tool install -a arm64 --global pbm 
+RUN dotnet tool install --global pbm 
 
 # RUN pbm help
 
 COPY ./bin/Release/netcoreapp3.1/publish/ /app
 
-FROM mcr.microsoft.com/dotnet/runtime:6.0-focal AS app
+FROM mcr.microsoft.com/dotnet/runtime:3.1 AS app
 WORKDIR /app
 
 COPY --from=base /app /app
