@@ -330,9 +330,9 @@ let mapDockerImageName (projectName:string) =
 Target "BuildDockerImages" (fun _ ->
    if(isWindows) then
         let result = ExecProcess(fun info -> 
-                info.FileName <- "ps"
+                info.FileName <- "powershell"
                 info.WorkingDirectory <- dockerScriptDir
-                info.Arguments <- sprintf " ./buildWindowsDockerImages.ps1 %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+                info.Arguments <- sprintf " ./buildWindowsDockerImages.ps1 -tagVersion %s" releaseNotes.AssemblyVersion) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
         if result <> 0 then failwithf "Unable to build Lighthouse Dockerfiles"
    else
        let result = ExecProcess(fun info -> 

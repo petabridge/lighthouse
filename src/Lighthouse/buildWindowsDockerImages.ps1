@@ -6,7 +6,7 @@ param (
 )
 
 Write-Host "Building project..."
-dotnet publish -c Release
+dotnet publish -c Release --framework netcoreapp3.1
 dotnet build-server shutdown
 
 $windowsImage = "{0}:windows-{1}" -f $imageName,$tagVersion
