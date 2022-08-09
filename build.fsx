@@ -331,61 +331,31 @@ Target "BuildDockerImages" (fun _ ->
                    -- "src/**/*Tests.csproj" // Don't publish unit tests
                    -- "src/**/*Tests*.csproj"
 
-    let dockerFile = 
-        match (isWindows) with 
-        | true -> "Dockerfile-windows"
-        | _ -> "Dockerfile-linux"
-
-    let dockerTags (imageName:string, assemblyVersion:string) =
-        match(isWindows) with
-        | true -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-nanoserver1803"; imageName + ":latest" |]
-        | _ -> [| imageName + ":" + releaseNotes.AssemblyVersion; imageName + ":" + releaseNotes.AssemblyVersion + "-linux"; imageName + ":latest" |]
-
-
     let remoteRegistryUrl = getBuildParamOrDefault "remoteRegistry" ""
 
     let buildDockerImage imageName projectPath =
-        
-        let args = 
-            if(hasBuildParam "remoteRegistry") then
-                StringBuilder()
-                    |> append "build"
-                    |> append "-f"
-                    |> append dockerFile
-                    |> append "-t"
-                    |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (imageName + ":latest") 
-                    |> append "-t"
-                    |> append (remoteRegistryUrl + "/" + imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (remoteRegistryUrl + "/" + imageName + ":latest") 
-                    |> append "."
-                    |> toText
-            else
-                StringBuilder()
-                    |> append "build"
-                    |> append "-f"
-                    |> append dockerFile
-                    |> append "-t"
-                    |> append (imageName + ":" + releaseNotes.AssemblyVersion) 
-                    |> append "-t"
-                    |> append (imageName + ":latest") 
-                    |> append "."
-                    |> toText
+        let buildSingle (dockerFile, tags) =
+            let args = StringBuilder()
+                        |> append "build"
+                        |> append "-f"
+                        |> append dockerFile
+                        |> appendWithoutQuotes (tags |> Seq.map (fun str -> sprintf "-t %s" str) |> String.concat " ")
+                        |> append "."
+                        |> toText
 
-        ExecProcess(fun info -> 
-                info.FileName <- "docker"
-                info.WorkingDirectory <- composedGetDirName projectPath
-                info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+            let result = ExecProcess(fun info -> 
+                    info.FileName <- "docker"
+                    info.WorkingDirectory <- composedGetDirName projectPath
+                    info.Arguments <- args) (System.TimeSpan.FromMinutes 5.0) (* Reasonably long-running task. *)
+            
+            if result <> 0 then failwithf "Unable to build Lighthouse Dockerfile %s in PWD %s" dockerFile (composedGetDirName projectPath)
+            
+        dockerFilesWithTags |> Seq.iter buildSingle
 
     let runSingleProject project =
         let projectName = composedGetFileNameWithoutExtension project
         let imageName = mapDockerImageName projectName
-        let result = match imageName with
-                        | None -> 0
-                        | Some(name) -> buildDockerImage name project
-        if result <> 0 then failwithf "docker build failed. %s" project
+        buildDockerImage imageName project
 
     projects |> Seq.iter (runSingleProject)
 )
