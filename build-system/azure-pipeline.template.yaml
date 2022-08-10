@@ -20,10 +20,6 @@ jobs:
         displayName: 'Use .NET 6 SDK 6.0.100'
         inputs:
           version: 6.0.100
-      - task: UseDotNet@2
-        displayName: "Use .NET Core SDK 3.1.415"
-        inputs:
-          version: 3.1.415
       # Linux or macOS
       - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         displayName: Docker - Register QEMU
