@@ -66,7 +66,12 @@ jobs:
           downloadType: 'single'
           artifactName: 'drop'
           downloadPath: '$(Agent.BuildDirectory)'
-
+      - task: CopyFiles@2
+        displayName: 'Copy into PWD'
+        inputs:
+          sourceFolder: $(Agent.BuildDirectory)/drop
+          contents:*
+          targetFolder: $(Agent.BuildDirectory)
         # needed for ARM builds
       - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         displayName: Docker - Register QEMU
