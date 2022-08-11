@@ -75,8 +75,8 @@ jobs:
         inputs:
           sourceFolder: $(Agent.BuildDirectory)/drop
           targetFolder: $(Agent.BuildDirectory)
+          contents: 
       - script: |
-          ls
           mv Dockerfile-linux Dockerfile
         displayName: 'Rename Dockerfile-linux to Dockerfile'
         workingDirectory: $(Agent.BuildDirectory)
@@ -92,6 +92,9 @@ jobs:
           containerRegistry: $(dockerConnectionName)
       - script: docker buildx create --name akka-arch --use
         displayName: Create Docker buildx Builder
+      - script: dotnet --info
+        displayName: debug .net
+        workingDirectory: $(Agent.BuildDirectory)
       - script: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --no-cache -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux --push .
         displayName: Docker Build and Push (multiarch)
         workingDirectory: $(Agent.BuildDirectory)
