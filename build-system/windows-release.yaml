@@ -75,7 +75,6 @@ jobs:
         inputs:
           sourceFolder: $(Agent.BuildDirectory)/drop
           targetFolder: $(Agent.BuildDirectory)
-          contents: 
       - script: |
           mv Dockerfile-linux Dockerfile
         displayName: 'Rename Dockerfile-linux to Dockerfile'
