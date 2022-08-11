@@ -87,6 +87,7 @@ jobs:
       - script: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --no-cache -f ./Dockerfile-linux -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux --push .
         displayName: Docker Build and Push (multiarch)
         continueOnError: true
+        workingDirectory: $(Agent.BuildDirectory)
       - task: Docker@2
         displayName: Logout of Docker Hub
         inputs:
