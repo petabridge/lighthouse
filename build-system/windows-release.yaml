@@ -60,6 +60,10 @@ jobs:
       vmImage: ubuntu-latest
     dependsOn: publishNetCore
     steps:
+      - task: UseDotNet@2
+        displayName: 'Use .NET 6 SDK 6.0.100'
+        inputs:
+          version: 6.0.100
       - task: DownloadBuildArtifacts@0
         inputs:
           buildType: 'current'
@@ -73,11 +77,11 @@ jobs:
           targetFolder: $(Agent.BuildDirectory)
       - bash: mv /Dockerfile-linux /Dockerfile
         displayName: 'Rename Dockerfile-linux to Dockerfile'
+        workingDirectory: $(Agent.BuildDirectory)
         failOnStderr: true
         # needed for ARM builds
       - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         displayName: Docker - Register QEMU
-        continueOnError: true
         condition: in( variables['Agent.OS'], 'Linux', 'Darwin' )
       - task: Docker@2
         displayName: "Login to Docker Hub"
@@ -86,9 +90,9 @@ jobs:
           containerRegistry: $(dockerConnectionName)
       - script: docker buildx create --name akka-arch --use
         displayName: Create Docker buildx Builder
-        continueOnError: true
       - script: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --no-cache -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux --push .
         displayName: Docker Build and Push (multiarch)
+        workingDirectory: $(Agent.BuildDirectory)
         continueOnError: true
       - task: Docker@2
         displayName: Logout of Docker Hub
