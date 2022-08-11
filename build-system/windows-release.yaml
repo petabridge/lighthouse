@@ -65,7 +65,6 @@ jobs:
           buildType: 'current'
           downloadType: 'single'
           artifactName: 'drop'
-          itemPattern: drop/**
           downloadPath: '$(Agent.BuildDirectory)'
 
         # needed for ARM builds
@@ -82,7 +81,6 @@ jobs:
         displayName: Create Docker buildx Builder
         continueOnError: true
       - script: docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 --no-cache -f Dockerfile-linux -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux --push .
-        workingDirectory: $(Agent.BuildDirectory)/drop
         displayName: Docker Build and Push (multiarch)
         continueOnError: true
       - task: Docker@2
