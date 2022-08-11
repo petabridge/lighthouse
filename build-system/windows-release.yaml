@@ -77,7 +77,7 @@ jobs:
         inputs:
           command: login
           containerRegistry: $(dockerConnectionName)
-      - script: docker build -no-cache -f Dockerfile-linux -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux .
+      - script: docker build --no-cache -f Dockerfile-linux -t petabridge/lighthouse:latest -t petabridge/lighthouse:linux-latest -t petabridge/lighthouse:$(Build.SourceBranchName) -t petabridge/lighthouse:$(Build.SourceBranchName)-linux .
         displayName: Docker Build (AMD64)
         workingDirectory: $(Agent.BuildDirectory)
       - script: docker buildx build --platform linux/arm64 -f Dockerfile-arm64 --no-cache -t petabridge/lighthouse:arm64-latest -t petabridge/lighthouse:$(Build.SourceBranchName)-arm64 .
