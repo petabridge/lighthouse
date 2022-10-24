@@ -20,7 +20,7 @@ Migrated onto .NET 6.</PackageReleaseNotes>
   <PropertyGroup>
     <XunitVersion>2.4.2</XunitVersion>
     <MicrosoftSdkVersion>17.3.2</MicrosoftSdkVersion>
-    <FluentAssertionsVersion>6.7.0</FluentAssertionsVersion>
+    <FluentAssertionsVersion>6.8.0</FluentAssertionsVersion>
     <NetCoreVersion>net6.0</NetCoreVersion>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
