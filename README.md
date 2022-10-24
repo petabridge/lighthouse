@@ -15,17 +15,33 @@ If you do need to make an update to Lighthouse, here are some cases where that m
 The easiest way to run Lighthouse is via [Petabridge's official Lighthouse Docker images on Docker Hub](https://hub.docker.com/r/petabridge/lighthouse):
 
 
-**Linux Images**
+### Linux Images
+
+#### AMD64
+
+```
+docker pull petabridge/lighthouse:latest
+```
+
+or
+
 ```
 docker pull petabridge/lighthouse:linux-latest
 ```
 
-**Windows Images**
+#### ARM64
+
+```
+docker pull petabridge/lighthouse:arm64-latest
+```
+
+### Windows Images
+
 ```
 docker pull petabridge/lighthouse:windows-latest
 ```
 
-All of these images run lighthouse on top of .NET Core 2.1 and expose the Akka.Cluster TCP endpoint on port 4053 by default. These images also come with [`Petabridge.Cmd.Host` installed](https://cmd.petabridge.com/articles/install/host-configuration.html) and exposed on TCP port 9110.
+All of these images run lighthouse on top of .NET 6 and expose the Akka.Cluster TCP endpoint on port 4053 by default. These images also come with [`Petabridge.Cmd.Host` installed](https://cmd.petabridge.com/articles/install/host-configuration.html) and exposed on TCP port 9110.
 
 > Linux images also come with [the `pbm` client](https://cmd.petabridge.com/articles/install/index.html) installed as a global .NET Core tool, so you can remotely execute `pbm` commands inside the containers themselves without exposing `Petabridge.Cmd.Host` over the network. 
 >

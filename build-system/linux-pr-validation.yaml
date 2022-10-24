@@ -20,3 +20,9 @@ jobs:
     vmImage: 'ubuntu-20.04'
     scriptFileName: ./build.sh
     scriptArgs: all
+- template: azure-pipeline.template.yaml
+  parameters:
+    name: LinuxRuntimesTests
+    vmImage: 'ubuntu-20.04'
+    scriptFileName: ./build.sh
+    scriptArgs: RunTestsOnRuntimes

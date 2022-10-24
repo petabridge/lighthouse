@@ -42,22 +42,6 @@ if [ ! -d "$TOOLS_DIR" ]; then
   mkdir "$TOOLS_DIR"
 fi
 
-###########################################################################
-# INSTALL .NET CORE CLI
-###########################################################################
-
-echo "Installing .NET CLI..."
-if [ ! -d "$SCRIPT_DIR/.dotnet" ]; then
-  mkdir "$SCRIPT_DIR/.dotnet"
-fi
-curl -Lsfo "$SCRIPT_DIR/.dotnet/dotnet-install.sh" $DOTNET_INSTALLER_URL
-bash "$SCRIPT_DIR/.dotnet/dotnet-install.sh" --version $DOTNET_VERSION --channel $DOTNET_CHANNEL --install-dir .dotnet --no-path
-export PATH="$SCRIPT_DIR/.dotnet":$PATH
-export DOTNET_SKIP_FIRST_TIME_EXPERIENCE=1
-export DOTNET_CLI_TELEMETRY_OPTOUT=1
-chmod -R 0755 ".dotnet"
-"$SCRIPT_DIR/.dotnet/dotnet" --info
-
 
 ###########################################################################
 # INSTALL NUGET
@@ -112,7 +96,7 @@ fi
 # INSTALL SignTool
 ###########################################################################
 if [ ! -f "$SIGNTOOL_EXE" ]; then
-    "$SCRIPT_DIR/.dotnet/dotnet" tool install SignClient --version 1.0.82 --tool-path "$SIGNCLIENT_DIR"
+    dotnet tool install SignClient --version 1.0.82 --tool-path "$SIGNCLIENT_DIR"
     if [ $? -ne 0 ]; then
         echo "SignClient already installed."
     fi
