@@ -1,9 +1,9 @@
-lighthouse{
+lighthouse {
   actorsystem: "actor-system" #POPULATE NAME OF YOUR ACTOR SYSTEM HERE
 }
 
 # See petabridge.cmd configuration options here: https://cmd.petabridge.com/articles/install/host-configuration.html
-petabridge.cmd{
+petabridge.cmd {
 	# default IP address used to listen for incoming petabridge.cmd client connections
 	# should be a safe default as it listens on "all network interfaces".
 	host = "0.0.0.0"
@@ -13,6 +13,8 @@ petabridge.cmd{
 }
 
 akka {
+  loglevel = DEBUG
+  loggers = ["Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog"]
   actor {
     provider = cluster
     
