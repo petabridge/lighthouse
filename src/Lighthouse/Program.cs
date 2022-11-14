@@ -48,7 +48,7 @@ namespace Lighthouse
                 .WriteTo.Console()
                 .CreateLogger();
 
-            Log.Logger.Information("Initializing logging from configuration");
+            Log.Logger.Information("Initializing logging from (serilog.json) configuration");
             try
             {
 
@@ -68,7 +68,7 @@ namespace Lighthouse
             } 
             catch(Exception ex)
             {
-                Log.Logger.Fatal(ex, "Initializing logging from configuration failed, continuing with default logger.");
+                Log.Logger.Information("Log configuration failed ({Message}), continuing with default logger", ex.Message);
             }
         }
     }
