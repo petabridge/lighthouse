@@ -5,12 +5,15 @@
 // -----------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Threading.Tasks;
 using Akka.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Petabridge.Cmd.Cluster;
 using Petabridge.Cmd.Host;
 using Petabridge.Cmd.Remote;
+using Serilog;
 
 namespace Lighthouse
 {
@@ -18,6 +21,7 @@ namespace Lighthouse
     {
         public static async Task Main(string[] args)
         {
+            InitializeLogger(args);
             var (config, actorSystemName) = LighthouseConfigurator.LaunchLighthouse();
             var hostBuilder = new HostBuilder();
             hostBuilder.ConfigureServices(services =>
@@ -35,6 +39,37 @@ namespace Lighthouse
 
             var host = hostBuilder.Build();
             await host.RunAsync();
+        }
+
+        private static void InitializeLogger(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            Log.Logger.Information("Initializing logging from configuration");
+            try
+            {
+
+                var configuration = new ConfigurationBuilder()
+                    .SetBasePath(Directory.GetCurrentDirectory())
+                    .AddJsonFile("serilog.json")
+                    .AddJsonFile($"serilog.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", true)
+                    .AddEnvironmentVariables()
+                    .AddCommandLine(args)
+                    .Build();
+
+                var configuredLogger = new LoggerConfiguration()
+                    .ReadFrom.Configuration(configuration)
+                    .CreateLogger();
+
+                Log.Logger = configuredLogger;
+            } 
+            catch(Exception ex)
+            {
+                Log.Logger.Fatal(ex, "Initializing logging from configuration failed, continuing with default logger.");
+            }
         }
     }
 }
