@@ -10,6 +10,7 @@ using System.Linq;
 using Akka.Actor;
 using Akka.Bootstrap.Docker;
 using Akka.Configuration;
+using Serilog;
 using static System.String;
 
 namespace Lighthouse
@@ -58,10 +59,10 @@ namespace Lighthouse
             /*
              * Sanity check
              */
-            Console.WriteLine($"[Lighthouse] ActorSystem: {systemName}; IP: {ipAddress}; PORT: {port}");
-            Console.WriteLine("[Lighthouse] Performing pre-boot sanity check. Should be able to parse address [{0}]",
+            Log.Logger.Information($"[Lighthouse] ActorSystem: {systemName}; IP: {ipAddress}; PORT: {port}");
+            Log.Logger.Information("[Lighthouse] Performing pre-boot sanity check. Should be able to parse address [{0}]",
                 selfAddress);
-            Console.WriteLine("[Lighthouse] Parse successful.");
+            Log.Logger.Information("[Lighthouse] Parse successful.");
 
 
             var seeds = clusterConfig.GetStringList("akka.cluster.seed-nodes").ToList();
