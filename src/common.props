@@ -25,7 +25,7 @@ Migrated onto .NET 6.</PackageReleaseNotes>
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net6.0</NetFrameworkTestVersion>
-    <AkkaVersion>1.4.49</AkkaVersion>
+    <AkkaVersion>1.5.0</AkkaVersion>
     <PbmVersion>1.2.1</PbmVersion>
   </PropertyGroup>
 </Project>
