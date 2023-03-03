@@ -1,13 +1,9 @@
 <Project>
   <PropertyGroup>
-    <Copyright>Copyright © 2015-2022 Petabridge, LLC</Copyright>
+    <Copyright>Copyright © 2015-2023 Petabridge, LLC</Copyright>
     <Authors>Petabridge</Authors>
-    <VersionPrefix>1.7.0</VersionPrefix>
-    <PackageReleaseNotes>[Bumped Akka.NET version to 1.4.40](https://github.com/akkadotnet/akka.net/releases/tag/1.4.40)
-[Bumped Akka.Hosting to 0.4.1](https://github.com/akkadotnet/Akka.Hosting/releases/tag/0.4.1).
-[Upgraded to Petabridge.Cmd 1.1.0](https://cmd.petabridge.com/articles/RELEASE_NOTES.html) and used Akka.Hosting support;
-Added ARM64 support to Docker image `petabridge/lighthouse:latest` and all other Linux images for Lighthouse.
-Migrated onto .NET 6.</PackageReleaseNotes>
+    <VersionPrefix>1.8.0</VersionPrefix>
+    <PackageReleaseNotes>[Bumped Akka.NET version to 1.5.0](https://github.com/akkadotnet/akka.net/releases/tag/1.5.0)</PackageReleaseNotes>
     <PackageIconUrl>https://petabridge.com/images/logo.png</PackageIconUrl>
     <PackageProjectUrl>
       https://github.com/petabridge/lighthouse
@@ -16,6 +12,7 @@ Migrated onto .NET 6.</PackageReleaseNotes>
       https://github.com/petabridge/lighthouse/blob/dev/LICENSE
     </PackageLicenseUrl>
     <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <XunitVersion>2.4.2</XunitVersion>
@@ -28,4 +25,7 @@ Migrated onto .NET 6.</PackageReleaseNotes>
     <AkkaVersion>1.5.1</AkkaVersion>
     <PbmVersion>1.2.1</PbmVersion>
   </PropertyGroup>
+  <ItemGroup>
+    <Using Include="Akka.Event" />
+  </ItemGroup>
 </Project>

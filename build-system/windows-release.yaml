@@ -22,9 +22,9 @@ jobs:
       demands: Cmd
     steps:
     - task: UseDotNet@2
-      displayName: 'Use .NET 6 SDK 6.0.100'
+      displayName: 'Use .NET 7 SDK'
       inputs:
-        version: 6.0.100
+        version: 7.x
     - task: BatchScript@1
       displayName: 'dotnet publish'
       inputs:
