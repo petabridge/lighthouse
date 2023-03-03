@@ -23,7 +23,7 @@
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net6.0</NetFrameworkTestVersion>
     <AkkaVersion>1.5.1</AkkaVersion>
-    <PbmVersion>1.2.1</PbmVersion>
+    <PbmVersion>1.3.0</PbmVersion>
   </PropertyGroup>
   <ItemGroup>
     <Using Include="Akka.Event" />
