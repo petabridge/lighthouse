@@ -1,21 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="..\common.props" />
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFrameworks>$(NetCoreVersion)</TargetFrameworks>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Akka.Cluster.Hosting" Version="0.5.1" />
-    <PackageReference Include="Akka.Logger.Serilog" Version="1.4.42" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Xml" Version="7.0.0" />
-    <PackageReference Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
-    <PackageReference Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
-    <PackageReference Include="Akka.Bootstrap.Docker">
-      <Version>0.5.3</Version>
-    </PackageReference>
+    <PackageReference Include="Akka.Cluster.Hosting"/>
+    <PackageReference Include="Akka.Logger.Serilog"/>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Xml"/>
+    <PackageReference Include="Petabridge.Cmd.Cluster"/>
+    <PackageReference Include="Petabridge.Cmd.Remote"/>
+    <PackageReference Include="Akka.Bootstrap.Docker"/>
     <PackageReference Include="Serilog" Version="2.12.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.4.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageReference Include="Serilog.Settings.Configuration"/>
+    <PackageReference Include="Serilog.Sinks.Console"/>
   </ItemGroup>
 
   <ItemGroup>
