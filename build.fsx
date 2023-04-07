@@ -316,7 +316,7 @@ Target "PublishCode" (fun _ ->
                     Project = project
                     Configuration = configuration
                     VersionSuffix = overrideVersionSuffix project
-                    Framework = "net6.0"
+                    Framework = "net7.0"
                     })
 
     projects |> Seq.iter (runSingleProject)
