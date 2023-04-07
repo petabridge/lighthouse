@@ -33,8 +33,8 @@ jobs:
     - task: CopyFiles@2
       displayName: 'Copy dotnet publish Output'
       inputs:
-        sourceFolder: src/Lighthouse/bin/Release/net6.0/publish/
-        targetFolder: $(Build.ArtifactStagingDirectory)/bin/Release/net6.0/publish/
+        sourceFolder: src/Lighthouse/bin/Release/net7.0/publish/
+        targetFolder: $(Build.ArtifactStagingDirectory)/bin/Release/net7.0/publish/
     - task: CopyFiles@2
       displayName: 'Copy Dockerfiles'
       inputs:
