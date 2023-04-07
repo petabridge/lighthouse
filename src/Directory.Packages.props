@@ -1,0 +1,31 @@
+<Project>
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+  <!-- Akka.NET Package Versions -->
+  <ItemGroup>
+    <PackageVersion Include="Akka.Cluster.Hosting" Version="1.5.0" />
+    <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Xml" Version="7.0.0" />
+    <PackageVersion Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
+    <PackageVersion Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
+    <PackageVersion Include="Akka.Bootstrap.Docker" Version="0.5.3"/>
+  </ItemGroup>
+
+  <!-- Serilog Package Versions -->
+  <ItemGroup>
+    <PackageVersion Include="Serilog" Version="2.12.0" />
+    <PackageVersion Include="Serilog.Settings.Configuration" Version="3.4.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
+  </ItemGroup>
+
+  <!-- Test Package Versions -->
+  <ItemGroup>
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.4.1" />
+    <PackageVersion Include="xunit" Version="2.4.2" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="2.4.5" />
+    <PackageVersion Include="FluentAssertions" Version="6.9.0" />
+    <PackageVersion Include="coverlet.collector" Version="3.2.0" />
+    <PackageVersion Include="Akka.TestKit.XUnit2" Version="$(AkkaVersion)" />
+  </ItemGroup>
+</Project>

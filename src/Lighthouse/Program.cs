@@ -28,7 +28,7 @@ namespace Lighthouse
             {
                 services.AddAkka(actorSystemName, builder =>
                 {
-                    builder.AddHocon(config) // clustering / remoting automatically configured here
+                    builder.AddHocon(config, HoconAddMode.Prepend) // clustering / remoting automatically configured here
                         .AddPetabridgeCmd(cmd =>
                         {
                             cmd.RegisterCommandPalette(ClusterCommands.Instance);

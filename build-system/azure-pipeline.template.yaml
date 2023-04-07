@@ -17,9 +17,9 @@ jobs:
         submodules: recursive  # set to 'true' for a single level of submodules or 'recursive' to get submodules of submodules
         persistCredentials: true
       - task: UseDotNet@2
-        displayName: 'Use .NET 6 SDK 6.0.100'
+        displayName: 'Use .NET 7'
         inputs:
-          version: 6.0.100
+          version: 7.x
       # Linux or macOS
       - script: docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
         displayName: Docker - Register QEMU
