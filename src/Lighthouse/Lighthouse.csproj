@@ -14,6 +14,11 @@
     <PackageReference Include="Serilog.Settings.Configuration"/>
     <PackageReference Include="Serilog.Sinks.Console"/>
   </ItemGroup>
+   
+  <PropertyGroup>
+    <ServerGarbageCollection>true</ServerGarbageCollection>
+    <TieredPGO>true</TieredPGO>
+  </PropertyGroup>
 
   <ItemGroup>
     <None Update="akka.hocon">
