@@ -4,7 +4,7 @@
   </PropertyGroup>
   <!-- Akka.NET Package Versions -->
   <ItemGroup>
-    <PackageVersion Include="Akka.Cluster.Hosting" Version="1.5.7" />
+    <PackageVersion Include="Akka.Cluster.Hosting" Version="1.5.8" />
     <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.7" />
     <PackageVersion Include="Microsoft.Extensions.Configuration.Xml" Version="7.0.0" />
     <PackageVersion Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
