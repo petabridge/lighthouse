@@ -6,7 +6,7 @@
   <ItemGroup>
     <PackageVersion Include="Akka.Cluster.Hosting" Version="1.5.13" />
     <PackageVersion Include="Akka.Logger.Serilog" Version="1.5.12.1" />
-    <PackageVersion Include="Microsoft.Extensions.Configuration.Xml" Version="7.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration.Xml" Version="8.0.0" />
     <PackageVersion Include="Petabridge.Cmd.Cluster" Version="$(PbmVersion)" />
     <PackageVersion Include="Petabridge.Cmd.Remote" Version="$(PbmVersion)" />
     <PackageVersion Include="Akka.Bootstrap.Docker" Version="0.5.3"/>
