@@ -16,7 +16,7 @@
   <ItemGroup>
     <PackageVersion Include="Serilog" Version="3.1.1" />
     <PackageVersion Include="Serilog.Settings.Configuration" Version="3.4.0" />
-    <PackageVersion Include="Serilog.Sinks.Console" Version="4.1.0" />
+    <PackageVersion Include="Serilog.Sinks.Console" Version="5.0.0" />
   </ItemGroup>
 
   <!-- Test Package Versions -->
