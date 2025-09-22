@@ -22,7 +22,7 @@
     <NetStandardVersion>netstandard1.6</NetStandardVersion>
     <NetFrameworkLibVersion>net461</NetFrameworkLibVersion>
     <NetFrameworkTestVersion>net6.0</NetFrameworkTestVersion>
-    <AkkaVersion>1.5.13</AkkaVersion>
+    <AkkaVersion>1.5.17.1</AkkaVersion>
     <PbmVersion>1.3.2</PbmVersion>
   </PropertyGroup>
   <ItemGroup>
